@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../../../components/Header";
 
 const profile = () => {
+    const router = useRouter();
     return (
         <SafeAreaView className="h-full bg-white">
             <Header text="Guest Mode" />
@@ -27,7 +28,10 @@ const profile = () => {
                         Sign up to Create League, Manage League or Bid any
                         players
                     </Text>
-                    <TouchableOpacity className="bg-cardBg rounded-md py-3 mb-4">
+                    <TouchableOpacity
+                        onPress={() => router.push("/signup")}
+                        className="bg-cardBg rounded-md py-3 mb-4"
+                    >
                         <Text className="text-xl font-dmRegular font-normal text-center text-textColor">
                             Sign up
                         </Text>

@@ -13,8 +13,8 @@ const Players = () => {
 
                 <View className="px-4 mt-4">
                     <FlatList
-                        renderItem={(renderItem) => {
-                            return <PlayerCard key={renderItem.index} />;
+                        renderItem={(renderItem, index) => {
+                            return <PlayerCard key={index} />;
                         }}
                         data={Data}
                         keyExtractor={(item) => item.id}
