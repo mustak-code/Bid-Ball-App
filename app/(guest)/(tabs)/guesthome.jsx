@@ -32,15 +32,15 @@ export default function Guesthome() {
             <View className="px-4">
                 <FlatList
                     renderItem={(renderItem) => {
-                        return <League />;
+                        return <League key={renderItem.item.id} />;
                     }}
                     data={DATA}
                     keyExtractor={(item) => item.id}
                     ListHeaderComponent={() => (
                         <Heading text="On Going League’s" />
                     )}
-                    ItemSeparatorComponent={() => (
-                        <View className="py-2"></View>
+                    ItemSeparatorComponent={(item) => (
+                        <View key={item} className="py-2"></View>
                     )}
                     contentContainerStyle={{
                         flexGrow: 1,

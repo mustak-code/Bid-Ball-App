@@ -1,8 +1,9 @@
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import FormBottomText from "../../../components/FormBottomText";
 import Header from "../../../components/Header";
 
 const profile = () => {
@@ -36,17 +37,11 @@ const profile = () => {
                             Sign up
                         </Text>
                     </TouchableOpacity>
-                    <View className="flex-row items-center justify-center">
-                        <Text className="text-sm font-dmRegular text-textColor">
-                            Already have an account?{" "}
-                        </Text>
-                        <Link
-                            href="/login"
-                            className="text-primary text-sm font-dmBold"
-                        >
-                            Login
-                        </Link>
-                    </View>
+                    <FormBottomText
+                        link="/login"
+                        text="Already have an account?"
+                        label="Login"
+                    />
                 </View>
             </View>
         </SafeAreaView>

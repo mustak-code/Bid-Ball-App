@@ -34,7 +34,7 @@ export default function RootLayout() {
     return (
         <ConvexProvider client={convex}>
             <Stack screenOptions={{ headerShown: false }} />
-            <StatusBar backgroundColor="#6C4BA4" animated />
+            <StatusBar backgroundColor="#6C4BA4" animated style="light" />
         </ConvexProvider>
     );
 }
