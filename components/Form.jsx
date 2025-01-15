@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { useState } from "react";
 import {
+    ActivityIndicator,
     Alert,
     Keyboard,
     Text,
@@ -12,6 +13,7 @@ import {
 import { EmailIcon, PasswordIcon, ProfileIcon } from "../assets/icons/Icons";
 import { api } from "../convex/_generated/api";
 import generateUserName from "../utils/generateUserName";
+import { generateVerificationCode } from "../utils/generateVerificationCode";
 import { validateEmail, validatePassword } from "../utils/getValidate";
 import Checkbox from "./Checkbox";
 import FormBottomText from "./FormBottomText";
@@ -21,7 +23,9 @@ import PrimaryBtn from "./PrimaryBtn";
 const Form = ({ type }) => {
     const [checkedValue, setCheckedValue] = useState("");
     const registerUser = useMutation(api.auth.createUser);
+    const updateVerificationCode = useMutation(api.auth.updateVerificationCode);
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -32,90 +36,176 @@ const Form = ({ type }) => {
     const convex = useConvex();
 
     const handleCreateUser = async () => {
-        const username = generateUserName(formData.email);
+        setIsLoading(true);
+        try {
+            const username = generateUserName(formData.email);
 
-        if (!checkedValue || checkedValue.trim().length === 0) {
-            Alert.alert("Please Choose a Role");
-            return;
-        }
-        if (!formData.name) {
-            Alert.alert("Please enter your name", "A name must be provided");
-            return;
-        }
-        if (!formData.email || !validateEmail(formData.email)) {
-            Alert.alert(
-                "Please enter your valid email",
-                "A valid email must be provided"
+            if (!checkedValue || checkedValue.trim().length === 0) {
+                Alert.alert("Please Choose a Role");
+                return;
+            }
+            if (!formData.name) {
+                Alert.alert(
+                    "Please enter your name",
+                    "A name must be provided"
+                );
+                return;
+            }
+            if (!formData.email || !validateEmail(formData.email)) {
+                Alert.alert(
+                    "Please enter your valid email",
+                    "A valid email must be provided"
+                );
+                return;
+            }
+            if (!formData.password || !validatePassword(formData.password)) {
+                Alert.alert(
+                    "Please enter a password",
+                    "Password must Have \n At least one uppercase letter \nAt least one lowercase letter\nAt least one digit\nAt least one special character\nEnsures the password is at least 8 characters long"
+                );
+                return;
+            }
+            if (formData.password !== formData.confirmPassword) {
+                Alert.alert("Passwords do not match");
+                return;
+            }
+
+            const user = await convex.query(api.auth.getUser, {
+                email: formData.email,
+            });
+
+            if (user?._id) {
+                Alert.alert("User already exists with that email");
+                return;
+            }
+
+            const verificationCode = generateVerificationCode();
+
+            await registerUser({
+                userName: username,
+                email: formData.email,
+                name: formData.name,
+                password: formData.password,
+                role: checkedValue,
+                VerificationCode: verificationCode,
+                isVerified: false,
+            });
+
+            const sentEmail = await fetch(
+                "https://cl4wch-8000.csb.app/send-mail",
+                {
+                    method: "POST",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: formData.email,
+                        code: verificationCode,
+                    }),
+                }
             );
-            return;
-        }
-        if (!formData.password || !validatePassword(formData.password)) {
-            Alert.alert(
-                "Please enter a password",
-                "Password must Have \n At least one uppercase letter \nAt least one lowercase letter\nAt least one digit\nAt least one special character\nEnsures the password is at least 8 characters long"
-            );
-            return;
-        }
-        if (formData.password !== formData.confirmPassword) {
-            Alert.alert("Passwords do not match");
-            return;
-        }
+            const isSent = await sentEmail.json();
 
-        const user = await convex.query(api.auth.getUser, {
-            email: formData.email,
-        });
-
-        if (user?._id) {
-            Alert.alert("User already exists with that email");
-            return;
+            if (isSent?.message) {
+                Alert.alert(
+                    "Registration Successfull",
+                    "We sent an email to your account with OTP",
+                    [
+                        {
+                            text: "Done",
+                            onPress: () =>
+                                router.push(`/verify/${formData.email}`),
+                        },
+                    ]
+                );
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setIsLoading(false);
         }
-
-        registerUser({
-            userName: username,
-            email: formData.email,
-            name: formData.name,
-            password: formData.password,
-            role: checkedValue,
-        });
-
-        Alert.alert("Registration Successfull", "", [
-            {
-                text: "Done",
-                onPress: () => router.push("/login"),
-            },
-        ]);
     };
 
     const handleSignIn = async () => {
-        if (!formData.email || !validateEmail(formData.email)) {
-            Alert.alert(
-                "Please enter your valid email",
-                "A valid email must be provided"
+        setIsLoading(true);
+        try {
+            if (!formData.email || !validateEmail(formData.email)) {
+                Alert.alert(
+                    "Please enter your valid email",
+                    "A valid email must be provided"
+                );
+                return;
+            }
+            if (!formData.password || !validatePassword(formData.password)) {
+                Alert.alert("Please enter Valid password");
+                return;
+            }
+            const user = await convex.query(
+                api.auth.getUserByEmailAndPassword,
+                {
+                    email: formData.email,
+                    password: formData.password,
+                }
             );
-            return;
-        }
-        if (!formData.password || !validatePassword(formData.password)) {
-            Alert.alert("Please enter Valid password");
-            return;
-        }
-        const user = await convex.query(api.auth.getUserByEmailAndPassword, {
-            email: formData.email,
-            password: formData.password,
-        });
 
-        if (!user) {
-            Alert.alert("User Not Found Please Sign up");
-            return;
+            if (!user) {
+                Alert.alert("User Not Found Please Sign up");
+                return;
+            }
+            if (user && !user.isVerified) {
+                Alert.alert("You are not verified", "", [
+                    {
+                        text: "Verify now",
+                        onPress: async () => {
+                            setIsLoading(true);
+                            try {
+                                const verificationCode =
+                                    generateVerificationCode();
+
+                                await fetch(
+                                    "https://cl4wch-8000.csb.app/send-mail",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            Accept: "application/json",
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                            email: formData.email,
+                                            code: verificationCode,
+                                        }),
+                                    }
+                                );
+
+                                await updateVerificationCode({
+                                    email: formData.email,
+                                    verificationCode: verificationCode,
+                                });
+
+                                router.push(`/verify/${formData.email}`);
+                            } catch (e) {
+                                console.log(e);
+                            } finally {
+                                setIsLoading(false);
+                            }
+                        },
+                    },
+                ]);
+                return;
+            }
+
+            Alert.alert("LogIn Successfull", "", [
+                {
+                    text: "Done",
+                    onPress: () => router.push("/home"),
+                },
+            ]);
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setIsLoading(false);
         }
-
-        console.log(user);
-
-        Alert.alert("LogIn Successfull", "", [
-            {
-                text: "Done",
-                onPress: () => router.push("/home"),
-            },
-        ]);
     };
 
     return (
@@ -214,7 +304,19 @@ const Form = ({ type }) => {
                                     ? handleCreateUser
                                     : handleSignIn
                             }
-                            label={type === "Sign Up" ? "Sign up" : "Sign In"}
+                            label={
+                                type === "Sign Up" ? (
+                                    isLoading ? (
+                                        <ActivityIndicator />
+                                    ) : (
+                                        "Sign Up"
+                                    )
+                                ) : isLoading ? (
+                                    <ActivityIndicator />
+                                ) : (
+                                    "Sign In"
+                                )
+                            }
                         />
 
                         {type === "Sign Up" ? (

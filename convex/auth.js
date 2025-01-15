@@ -8,6 +8,8 @@ export const createUser = mutation({
         email: v.string(),
         password: v.string(),
         role: v.string(),
+        VerificationCode: v.number(),
+        isVerified: v.boolean(),
     },
     handler: async (ctx, args) => {
         const existingUser = await ctx.db
@@ -25,6 +27,8 @@ export const createUser = mutation({
             email: args.email,
             password: args.password,
             role: args.role,
+            VerificationCode: args.VerificationCode,
+            isVerified: args.isVerified,
         });
     },
 });
@@ -54,5 +58,67 @@ export const getUserByEmailAndPassword = query({
             )
             .first();
         return user;
+    },
+});
+
+export const verifyUser = mutation({
+    args: {
+        verificationCode: v.number(),
+        email: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_verificationCode_email", (q) =>
+                q
+                    .eq("VerificationCode", args.verificationCode)
+                    .eq("email", args.email)
+            )
+            .first();
+
+        if (!user) {
+            return {
+                success: false,
+                message: "Problems verifying user",
+            };
+        }
+
+        ctx.db.patch(user._id, {
+            isVerified: true,
+        });
+
+        return {
+            success: true,
+            message: "You are Verified",
+        };
+    },
+});
+
+export const updateVerificationCode = mutation({
+    args: {
+        verificationCode: v.number(),
+        email: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_email", (q) => q.eq("email", args.email))
+            .first();
+
+        if (!user) {
+            return {
+                success: false,
+                message: "user not found",
+            };
+        }
+
+        ctx.db.patch(user._id, {
+            VerificationCode: args.verificationCode,
+        });
+
+        return {
+            success: true,
+            message: "code updated",
+        };
     },
 });

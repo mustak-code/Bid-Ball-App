@@ -8,7 +8,9 @@ export default defineSchema({
         password: v.string(),
         role: v.string(),
         VerificationCode: v.optional(v.number()),
+        isVerified: v.optional(v.boolean()),
     })
         .index("by_email", ["email"])
-        .index("by_email_password", ["password", "email"]),
+        .index("by_email_password", ["password", "email"])
+        .index("by_verificationCode_email", ["VerificationCode", "email"]),
 });
