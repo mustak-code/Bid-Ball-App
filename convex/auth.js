@@ -122,3 +122,32 @@ export const updateVerificationCode = mutation({
         };
     },
 });
+
+export const updateUser = mutation({
+    args: {
+        phone: v.optional(v.string()),
+        email: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_email", (q) => q.eq("email", args.email))
+            .first();
+
+        if (!user) {
+            return {
+                success: false,
+                message: "user not found",
+            };
+        }
+
+        await ctx.db.patch(user._id, {
+            phone: args.phone,
+        });
+        const newUser = await ctx.db
+            .query("users")
+            .withIndex("by_email", (q) => q.eq("email", args.email))
+            .first();
+        return newUser;
+    },
+});

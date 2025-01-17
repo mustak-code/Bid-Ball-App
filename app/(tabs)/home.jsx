@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 import Heading from "../../components/Heading";
 import IconsButton from "../../components/IconsButton";
 import League from "../../components/League";
+import useStore from "../../store/store";
 
 const DATA = [
     {
@@ -26,13 +27,18 @@ const DATA = [
     },
 ];
 
-export default function Guesthome() {
+export default function Home() {
+    const { user } = useStore((store) => store);
+    console.log(user);
+
     return (
         <SafeAreaView className="bg-white h-full w-full">
             <Header text="Bid Ball" />
 
             <View className="px-4">
-                <IconsButton Icon={PlusIcon} text={"Create a League"} />
+                {user?.role === "Authority" && (
+                    <IconsButton Icon={PlusIcon} text={"Create a League"} />
+                )}
 
                 <FlatList
                     renderItem={(renderItem) => {
@@ -41,7 +47,14 @@ export default function Guesthome() {
                     data={DATA}
                     keyExtractor={(item) => item.id}
                     ListHeaderComponent={() => (
-                        <Heading text="On Going League’s" />
+                        <Heading
+                            text={
+                                user?.role === "Authority" ||
+                                user?.role === "Team Manager"
+                                    ? "My League's"
+                                    : "On Going League’s"
+                            }
+                        />
                     )}
                     ItemSeparatorComponent={(item) => (
                         <View key={item} className="py-2"></View>

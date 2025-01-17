@@ -9,6 +9,8 @@ export default defineSchema({
         role: v.string(),
         VerificationCode: v.optional(v.number()),
         isVerified: v.optional(v.boolean()),
+        profile: v.optional(v.string()),
+        phone: v.optional(v.string()),
     })
         .index("by_email", ["email"])
         .index("by_email_password", ["password", "email"])

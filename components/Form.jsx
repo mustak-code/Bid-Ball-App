@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { EmailIcon, PasswordIcon, ProfileIcon } from "../assets/icons/Icons";
 import { api } from "../convex/_generated/api";
+import useStore from "../store/store";
 import generateUserName from "../utils/generateUserName";
 import { generateVerificationCode } from "../utils/generateVerificationCode";
 import { validateEmail, validatePassword } from "../utils/getValidate";
@@ -24,6 +25,7 @@ const Form = ({ type }) => {
     const [checkedValue, setCheckedValue] = useState("");
     const registerUser = useMutation(api.auth.createUser);
     const updateVerificationCode = useMutation(api.auth.updateVerificationCode);
+    const { setUser } = useStore((state) => state);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -194,6 +196,8 @@ const Form = ({ type }) => {
                 ]);
                 return;
             }
+
+            setUser(user);
 
             Alert.alert("LogIn Successfull", "", [
                 {

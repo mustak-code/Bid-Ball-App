@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, { Path } from "react-native-svg";
+import Svg, { G, Path } from "react-native-svg";
 export const Play = (props) => (
     <Svg
         xmlns="http://www.w3.org/2000/svg"
@@ -343,5 +343,37 @@ export const PlusIcon = (props) => (
             strokeWidth={2}
             d="M5.5 12.5h14M12.5 5.5v14"
         />
+    </Svg>
+);
+
+export const EditIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        stroke="#6d4ca4"
+        viewBox="0 0 24 24"
+        {...props}
+    >
+        <G strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}>
+            <Path d="m21.28 6.4-9.54 9.54c-.95.95-3.77 1.39-4.4.76-.63-.63-.2-3.45.75-4.4l9.55-9.55a2.58 2.58 0 1 1 3.64 3.65v0Z" />
+            <Path d="M11 4H6a4 4 0 0 0-4 4v10a4 4 0 0 0 4 4h11c2.21 0 3-1.8 3-4v-5" />
+        </G>
+    </Svg>
+);
+
+export const SignoutIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#fff"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-log-out"
+        {...props}
+    >
+        <Path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
     </Svg>
 );

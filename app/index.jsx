@@ -4,10 +4,18 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../components/CustomButton";
 
+import { Redirect } from "expo-router";
 import footBallLottie from "../assets/lottie-files/football.json";
+import useStore from "../store/store";
 
 export default function Index() {
     const animateFootBall = useRef(null);
+    const { user } = useStore((store) => store);
+
+    if (user?.isVerified) {
+        return <Redirect href="/home" />;
+    }
+
     return (
         <SafeAreaView>
             <View className="items-center justify-center ">
