@@ -1,8 +1,8 @@
 import React from "react";
 import { FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Header from "../../../components/Header";
-import PlayerCard from "../../../components/PlayerCard";
+import Header from "../../components/Header";
+import PlayerCard from "../../components/PlayerCard";
 const DATA = [
     {
         id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",

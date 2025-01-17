@@ -1,9 +1,11 @@
 import React from "react";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Header from "../../../components/Header";
-import Heading from "../../../components/Heading";
-import League from "../../../components/League";
+import { PlusIcon } from "../../assets/icons/Icons";
+import Header from "../../components/Header";
+import Heading from "../../components/Heading";
+import IconsButton from "../../components/IconsButton";
+import League from "../../components/League";
 
 const DATA = [
     {
@@ -30,6 +32,8 @@ export default function Guesthome() {
             <Header text="Bid Ball" />
 
             <View className="px-4">
+                <IconsButton Icon={PlusIcon} text={"Create a League"} />
+
                 <FlatList
                     renderItem={(renderItem) => {
                         return <League key={renderItem.item.id} />;

@@ -8,7 +8,7 @@ import {
     PlayerIconInactive,
     ProfileIcon,
     ProfileIconInactive,
-} from "../../../assets/icons/Icons";
+} from "../../assets/icons/Icons";
 
 export default function TabLayout() {
     return (
@@ -23,7 +23,7 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen
-                name="guesthome"
+                name="home"
                 options={{
                     title: "Home",
                     tabBarIcon: ({ focused }) =>

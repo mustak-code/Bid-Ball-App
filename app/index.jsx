@@ -29,11 +29,7 @@ export default function Index() {
                         link="/signup"
                         label="Continue as Team Manager"
                     />
-                    <CustomButton link="/verify" label="Verify" />
-                    <CustomButton
-                        link="/(guest)/guesthome"
-                        label="Continue as Guest"
-                    />
+                    <CustomButton link="/home" label="Continue as Guest" />
                 </View>
             </View>
         </SafeAreaView>

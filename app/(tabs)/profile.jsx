@@ -3,8 +3,8 @@ import LottieView from "lottie-react-native";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import FormBottomText from "../../../components/FormBottomText";
-import Header from "../../../components/Header";
+import FormBottomText from "../../components/FormBottomText";
+import Header from "../../components/Header";
 
 const profile = () => {
     const router = useRouter();
@@ -13,7 +13,7 @@ const profile = () => {
             <Header text="Guest Mode" />
             <View className="h-full items-center justify-center px-4">
                 <LottieView
-                    source={require("../../../assets/lottie-files/action.json")}
+                    source={require("../../assets/lottie-files/action.json")}
                     autoPlay={true}
                     loop
                     style={{
