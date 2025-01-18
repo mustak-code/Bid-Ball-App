@@ -32,7 +32,7 @@ const ProfileComponent = () => {
     const updateUser = useMutation(api.auth.updateUser);
 
     const [assets, error] = useAssets([
-        require("../assets/images/profile-avatar.png"),
+        require("../assets/images/Profile_avatar_placeholder_large.png"),
     ]);
     const phoneRef = useRef(null);
 

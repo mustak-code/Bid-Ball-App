@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, { G, Path } from "react-native-svg";
+import Svg, { Circle, G, Path } from "react-native-svg";
 export const Play = (props) => (
     <Svg
         xmlns="http://www.w3.org/2000/svg"
@@ -375,5 +375,91 @@ export const SignoutIcon = (props) => (
         {...props}
     >
         <Path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" />
+    </Svg>
+);
+
+export const AttachmentIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#000000"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-paperclip"
+        {...props}
+    >
+        <Path d="M13.234 20.252 21 12.3M16 6l-8.414 8.586a2 2 0 0 0 0 2.828 2 2 0 0 0 2.828 0l8.414-8.586a4 4 0 0 0 0-5.656 4 4 0 0 0-5.656 0l-8.415 8.585a6 6 0 1 0 8.486 8.486" />
+    </Svg>
+);
+
+export const DollarIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6d4ca4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-dollar-sign"
+        {...props}
+    >
+        <Path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </Svg>
+);
+
+export const PhoneIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6d4ca4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-phone"
+        {...props}
+    >
+        <Path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    </Svg>
+);
+
+export const LocationBigIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6d4ca4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-map-pin"
+        {...props}
+    >
+        <Path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
+        <Circle cx={12} cy={10} r={3} />
+    </Svg>
+);
+
+export const HashIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6d4ca4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-hash"
+        {...props}
+    >
+        <Path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18" />
     </Svg>
 );

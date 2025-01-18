@@ -1,8 +1,12 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import { FlatList, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { PlusIcon } from "../../assets/icons/Icons";
 import Header from "../../components/Header";
+import IconsButton from "../../components/IconsButton";
 import PlayerCard from "../../components/PlayerCard";
+import useStore from "../../store/store";
 const DATA = [
     {
         id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -22,10 +26,24 @@ const DATA = [
     },
 ];
 const Players = () => {
+    const { user } = useStore((state) => state);
+
+    const router = useRouter();
+
     return (
         <SafeAreaView className="h-full w-full bg-white">
             <View>
                 <Header text="Player’s Matrix" />
+
+                {user?.role === "Authority" && (
+                    <View className="px-4">
+                        <IconsButton
+                            onpress={() => router.push("/player/addplayer")}
+                            Icon={PlusIcon}
+                            text={"Add Player"}
+                        />
+                    </View>
+                )}
 
                 <View className="px-4 mt-4">
                     <FlatList
