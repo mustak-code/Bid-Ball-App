@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as imageupload from "../imageupload.js";
+import type * as player from "../player.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -27,6 +28,7 @@ import type * as imageupload from "../imageupload.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   imageupload: typeof imageupload;
+  player: typeof player;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

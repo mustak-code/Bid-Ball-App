@@ -34,12 +34,12 @@ export default function Home() {
     return (
         <SafeAreaView className="bg-white h-full w-full">
             <Header text="Bid Ball" />
-
             <View className="px-4">
                 {user?.role === "Authority" && (
                     <IconsButton Icon={PlusIcon} text={"Create a League"} />
                 )}
-
+            </View>
+            <View className="px-4 mt-4">
                 <FlatList
                     renderItem={(renderItem) => {
                         return <League key={renderItem.item.id} />;
@@ -61,7 +61,7 @@ export default function Home() {
                     )}
                     contentContainerStyle={{
                         flexGrow: 1,
-                        paddingBottom: 90,
+                        paddingBottom: 165,
                     }}
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent={() => <Text> There no League </Text>}

@@ -1,11 +1,12 @@
 import { useConvex, useMutation } from "convex/react";
 import { useAssets } from "expo-asset";
 
-import * as ImagePicker from "expo-image-picker";
 import React, { useRef, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     Image,
+    ScrollView,
     Text,
     TextInput,
     TouchableOpacity,
@@ -14,13 +15,16 @@ import {
 import { EditIcon, SignoutIcon } from "../assets/icons/Icons";
 import { api } from "../convex/_generated/api";
 import useStore from "../store/store";
+import { validatePhoneNumber } from "../utils/getValidate";
+import storeImageToDb from "../utils/storeImageToDB";
+import uplaodImage from "../utils/uplaodImage";
 import IconsButton from "./IconsButton";
 
 const ProfileComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
     const [isFocused, setIsFocused] = useState(false);
-    const [phone, setPhone] = useState("N/A");
+    const [phone, setPhone] = useState("");
     const convex = useConvex();
     const generateImageUploadUrl = useMutation(
         api.imageupload.generateImageUploadUrl
@@ -41,55 +45,21 @@ const ProfileComponent = () => {
     const handleProfile = async () => {
         setIsLoading(true);
         try {
-            const res = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ["images"],
-                allowsEditing: true,
-                aspect: [1, 1],
-                quality: 1,
-            });
-
-            if (res.canceled) {
-                console.log("Image picking canceled.");
-                return;
-            }
-
-            // Set the selected image
-            const image = res.assets[0];
+            const image = await uplaodImage();
             setProfileImage(image);
 
-            // Get a signed upload URL from Convex
             const uploadUrl = await generateImageUploadUrl();
 
-            // Fetch the image as a Blob
-            const response = await fetch(image.uri);
-            const blob = await response.blob();
-
-            // Upload the image to Convex storage
-            const uploadResponse = await fetch(uploadUrl, {
-                method: "POST",
-                headers: {
-                    "Content-Type": blob.type, // Dynamically set the MIME type
-                },
-                body: blob, // Send the image blob
-            });
-
-            if (!uploadResponse.ok) {
-                throw new Error("Failed to upload image to storage.");
-            }
-
-            // Get the storage ID from the response
+            const uploadResponse = await storeImageToDb(image, uploadUrl);
             const { storageId } = await uploadResponse.json();
 
-            // Generate a public URL for the image
             const imageUrl = await getImageUrl({ storageId });
 
-            // Save image details in the database
             await sendImageToDatabase({
                 storageId: imageUrl,
                 user: user?.email,
             });
 
-            // Fetch updated user details from Convex
             const newUser = await convex.query(
                 api.auth.getUserByEmailAndPassword,
                 {
@@ -107,42 +77,32 @@ const ProfileComponent = () => {
     };
 
     const handlePhone = async () => {
-        phoneRef.current.focus();
-        setIsFocused(true);
-        setPhone("");
-        if (isFocused) {
-            phoneRef.current.blur();
-            setIsFocused(false);
-            if (phone === "") {
-                setPhone("N/A");
-            } else {
-                if (phone !== "") {
+        setIsLoading(true);
+        try {
+            phoneRef.current.focus();
+            // setPhone("");
+            setIsFocused(!isFocused);
+
+            if (isFocused) {
+                if (phone.trim() !== "" && validatePhoneNumber(phone)) {
                     const newUser = await updateUser({
                         phone: phone,
                         email: user?.email,
                     });
                     setUser(newUser);
+                } else {
+                    Alert.alert("Invalid phone number");
                 }
             }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleOnChangePhone = (text) => {
         setPhone(text);
-        console.log(text);
-    };
-    const onpress = () => {
-        setIsFocused(true);
-        setPhone("");
-    };
-    const handleonblur = () => {
-        if (isFocused) {
-            phoneRef.current.blur();
-            setIsFocused(false);
-            if (phone === "") {
-                setPhone("N/A");
-            }
-        }
     };
 
     const handleSignOut = () => {
@@ -150,7 +110,7 @@ const ProfileComponent = () => {
     };
 
     return (
-        <View className="px-4">
+        <ScrollView className="px-4">
             <View className="flex-row items-center w-[100px] h-[100px] justify-center mt-12 relative mx-auto">
                 {assets ? (
                     isLoading ? (
@@ -222,15 +182,23 @@ const ProfileComponent = () => {
                             className="text-base font-dmRegular"
                             ref={phoneRef}
                             onChangeText={handleOnChangePhone}
-                            onFocus={onpress}
-                            onBlur={handleonblur}
                         />
-                        <TouchableOpacity onPress={handlePhone}>
-                            <Text className="text-base font-dmRegular text-primary">
-                                Add Phone
-                            </Text>
-                        </TouchableOpacity>
+                        {isLoading ? (
+                            <ActivityIndicator />
+                        ) : (
+                            <TouchableOpacity onPress={handlePhone}>
+                                <Text className="text-base font-dmRegular text-primary">
+                                    Add Phone
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
+                )}
+                {!user?.phone && (
+                    <Text className="text-xs text-textColor">
+                        Please Add phone number carefully you can't change it
+                        again
+                    </Text>
                 )}
             </View>
 
@@ -239,7 +207,7 @@ const ProfileComponent = () => {
                 Icon={SignoutIcon}
                 text="Sign out"
             />
-        </View>
+        </ScrollView>
     );
 };
 

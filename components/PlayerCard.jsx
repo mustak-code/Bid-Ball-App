@@ -4,21 +4,21 @@ import React from "react";
 import { Text, View } from "react-native";
 import { ArrowUp } from "../assets/icons/Icons";
 
-const PlayerCard = () => {
+const PlayerCard = ({ data }) => {
     const [assets, error] = useAssets([require("../assets/images/player.png")]);
     return (
         <View className="p-3 bg-cardBg rounded-xl">
             <View className="flex-row items-start gap-3">
                 {assets ? (
                     <Image
-                        source={assets[0]}
+                        source={data?.dp ? data.dp : assets[0]}
                         style={{ width: 100, height: 100, borderRadius: 6 }}
                     />
                 ) : null}
 
                 <View className="flex-1">
                     <Text className="text-xl font-Do font-normal text-textColor mb-2">
-                        SK Aditya Mahmud
+                        {data?.name}
                     </Text>
                     <Text className="font-dmRegular text-sm font-normal text-black mb-2">
                         Lord Association
