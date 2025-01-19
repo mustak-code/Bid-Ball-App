@@ -29,7 +29,6 @@ const DATA = [
 
 export default function Home() {
     const { user } = useStore((store) => store);
-    console.log(user);
 
     return (
         <SafeAreaView className="bg-white h-full w-full">
