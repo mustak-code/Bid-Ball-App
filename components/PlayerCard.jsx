@@ -1,13 +1,31 @@
 import { useAssets } from "expo-asset";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import React from "react";
-import { Text, View } from "react-native";
-import { ArrowUp } from "../assets/icons/Icons";
+import { Text, TouchableOpacity, View } from "react-native";
+import { ArrowUp, EditIcon } from "../assets/icons/Icons";
+import useStore from "../store/store";
 
 const PlayerCard = ({ data }) => {
     const [assets, error] = useAssets([require("../assets/images/player.png")]);
+
+    const { user } = useStore((state) => state);
+    const router = useRouter();
+
+    const handleEditRouter = () => {
+        router.push(`/player/${data._id}`);
+    };
+
     return (
-        <View className="p-3 bg-cardBg rounded-xl">
+        <View className="p-3 bg-cardBg rounded-xl relative">
+            {user?.role === "Authority" && data.addedBy === user?._id ? (
+                <TouchableOpacity
+                    onPress={handleEditRouter}
+                    className="w-8 h-8 p-2 bg-white rounded-full absolute top-1 right-1 z-40"
+                >
+                    <EditIcon />
+                </TouchableOpacity>
+            ) : null}
             <View className="flex-row items-start gap-3">
                 {assets ? (
                     <Image

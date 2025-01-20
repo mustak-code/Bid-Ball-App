@@ -56,6 +56,50 @@ export const getPlayers = query({
         paginationOpts: paginationOptsValidator,
     },
     handler: async (ctx, args) => {
-        return ctx.db.query("players").paginate(args.paginationOpts);
+        return await ctx.db.query("players").paginate(args.paginationOpts);
+    },
+});
+
+export const getSinglePlayer = query({
+    args: {
+        id: v.id("players"),
+    },
+    handler: async (ctx, args) => {
+        return ctx.db.get(args.id);
+    },
+});
+
+export const updatePlayer = mutation({
+    args: {
+        name: v.optional(v.string()),
+        dp: v.optional(v.string()),
+        genre: v.optional(v.string()),
+        handed: v.optional(v.string()),
+        age: v.optional(v.string()),
+        location: v.optional(v.string()),
+        totalMatchPlayed: v.optional(v.number()),
+        mobile: v.optional(v.string()),
+        email: v.optional(v.string()),
+        minimunBidAmount: v.optional(v.string()),
+        playerId: v.id("players"),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.patch(args.playerId, {
+            name: args.name,
+            dp: args.dp,
+            genre: args.genre,
+            handed: args.handed,
+            age: args.age,
+            location: args.location,
+            totalMatchPlayed: args.totalMatchPlayed,
+            mobile: args.mobile,
+            email: args.email,
+            minimunBidAmount: args.minimunBidAmount,
+        });
+
+        return {
+            success: true,
+            message: "Player Updated Successfully",
+        };
     },
 });

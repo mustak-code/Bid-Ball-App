@@ -1,7 +1,7 @@
-import { useMutation } from "convex/react";
+import { useConvex, useMutation } from "convex/react";
 import { useAssets } from "expo-asset";
-import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
     Alert,
@@ -21,29 +21,31 @@ import {
     PhoneIcon,
     PlusIcon,
     ProfileIcon,
-} from "../../assets/icons/Icons";
-import Checkbox from "../../components/Checkbox";
-import Header from "../../components/Header";
-import IconInput from "../../components/IconInput";
-import IconsButton from "../../components/IconsButton";
-import { api } from "../../convex/_generated/api";
-import useStore from "../../store/store";
-import { validateEmail, validatePhoneNumber } from "../../utils/getValidate";
-import storeImageToDB from "../../utils/storeImageToDB";
-import uplaodImage from "../../utils/uplaodImage";
+} from "../../../assets/icons/Icons";
+import Checkbox from "../../../components/Checkbox";
+import Header from "../../../components/Header";
+import IconInput from "../../../components/IconInput";
+import IconsButton from "../../../components/IconsButton";
+import { api } from "../../../convex/_generated/api";
+import useStore from "../../../store/store";
+import { validateEmail, validatePhoneNumber } from "../../../utils/getValidate";
+import storeImageToDB from "../../../utils/storeImageToDB";
+import uplaodImage from "../../../utils/uplaodImage";
 
-const AddPlayer = () => {
+const EditPlayer = () => {
     const [assets, error] = useAssets([
-        require("../../assets/images/ball.png"),
-        require("../../assets/images/Profile_avatar_placeholder_large.png"),
+        require("../../../assets/images/ball.png"),
+        require("../../../assets/images/Profile_avatar_placeholder_large.png"),
     ]);
     const router = useRouter();
     const { user } = useStore((state) => state);
+    const { playerId } = useLocalSearchParams();
     const generateImageUploadUrl = useMutation(
         api.imageupload.generateImageUploadUrl
     );
     const getImageUrl = useMutation(api.imageupload.getImageUrl);
-    const createPlayer = useMutation(api.player.createPlayer);
+    const updatePlayer = useMutation(api.player.updatePlayer);
+    const convex = useConvex();
 
     const [isLoading, setIsLoading] = useState(false);
     const [playerInfo, setPlayerInfo] = useState({
@@ -57,6 +59,30 @@ const AddPlayer = () => {
         category: "",
         handed: "",
     });
+
+    useEffect(() => {
+        const getData = async () => {
+            const player = await convex.query(api.player.getSinglePlayer, {
+                id: playerId,
+            });
+
+            if (player?._id) {
+                setPlayerInfo({
+                    ...playerInfo,
+                    profileImage: player?.dp,
+                    name: player?.name,
+                    minimumAmount: player?.minimunBidAmount,
+                    age: player?.age,
+                    location: player?.location,
+                    phone: player?.mobile,
+                    email: player?.email,
+                    category: player?.genre,
+                    handed: player?.handed,
+                });
+            }
+        };
+        getData();
+    }, []);
 
     const handleProfileUpload = async () => {
         setIsLoading(true);
@@ -147,7 +173,7 @@ const AddPlayer = () => {
                 return;
             }
 
-            const player = await createPlayer({
+            const player = await updatePlayer({
                 name: playerInfo.name,
                 dp: playerInfo.profileImage,
                 genre: playerInfo.category,
@@ -158,11 +184,11 @@ const AddPlayer = () => {
                 mobile: playerInfo.phone,
                 email: playerInfo.email,
                 minimunBidAmount: playerInfo.minimumAmount,
-                addedBy: user._id,
+                playerId: playerId,
             });
 
             if (player?.success) {
-                Alert.alert("Player Added successfully", "", [
+                Alert.alert(player?.message, "", [
                     {
                         text: "Okay",
                         onPress: () => {
@@ -171,7 +197,7 @@ const AddPlayer = () => {
                     },
                 ]);
             } else {
-                Alert.alert("Player already Exists with this email");
+                Alert.alert("Player update Failed");
             }
         } catch (err) {
             console.log(err);
@@ -182,7 +208,7 @@ const AddPlayer = () => {
 
     return (
         <SafeAreaView>
-            <Header text="Add Player" />
+            <Header text="Edit Player" />
             <ScrollView
                 className="p-5"
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 90 }}
@@ -262,8 +288,8 @@ const AddPlayer = () => {
                         Icon={PhoneIcon}
                         placeholder="Phone"
                         type="text"
-                        keyboardType="number-pad"
                         value={playerInfo.phone}
+                        keyboardType="number-pad"
                         onType={(phone) =>
                             setPlayerInfo({ ...playerInfo, phone })
                         }
@@ -355,4 +381,4 @@ const AddPlayer = () => {
     );
 };
 
-export default AddPlayer;
+export default EditPlayer;
