@@ -6,14 +6,19 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { ArrowUp, EditIcon } from "../assets/icons/Icons";
 import useStore from "../store/store";
 
-const PlayerCard = ({ data }) => {
+const PlayerCard = ({ data, showBottomSheet }) => {
     const [assets, error] = useAssets([require("../assets/images/player.png")]);
 
-    const { user } = useStore((state) => state);
+    const { user, setCurrectPlayerSelected } = useStore((state) => state);
     const router = useRouter();
 
     const handleEditRouter = () => {
         router.push(`/player/${data._id}`);
+    };
+
+    const handleShowBottomSheet = () => {
+        showBottomSheet();
+        setCurrectPlayerSelected(data._id);
     };
 
     return (
@@ -35,9 +40,11 @@ const PlayerCard = ({ data }) => {
                 ) : null}
 
                 <View className="flex-1">
-                    <Text className="text-xl font-Do font-normal text-textColor mb-2">
-                        {data?.name}
-                    </Text>
+                    <TouchableOpacity onPress={handleShowBottomSheet}>
+                        <Text className="text-xl font-Do font-normal text-textColor mb-2">
+                            {data?.name}
+                        </Text>
+                    </TouchableOpacity>
                     <Text className="font-dmRegular text-sm font-normal text-black mb-2">
                         Lord Association
                     </Text>

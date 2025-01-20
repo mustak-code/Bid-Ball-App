@@ -5,7 +5,10 @@ const useStore = create(
     persist(
         (set) => ({
             user: {},
+            currentPlayerSelected: "",
             setUser: (user) => set({ user: user }),
+            setCurrectPlayerSelected: (id) =>
+                set({ currentPlayerSelected: id }),
         }),
         {
             name: "user-store",

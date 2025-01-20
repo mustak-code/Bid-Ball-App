@@ -27,7 +27,6 @@ import Header from "../../../components/Header";
 import IconInput from "../../../components/IconInput";
 import IconsButton from "../../../components/IconsButton";
 import { api } from "../../../convex/_generated/api";
-import useStore from "../../../store/store";
 import { validateEmail, validatePhoneNumber } from "../../../utils/getValidate";
 import storeImageToDB from "../../../utils/storeImageToDB";
 import uplaodImage from "../../../utils/uplaodImage";
@@ -38,7 +37,6 @@ const EditPlayer = () => {
         require("../../../assets/images/Profile_avatar_placeholder_large.png"),
     ]);
     const router = useRouter();
-    const { user } = useStore((state) => state);
     const { playerId } = useLocalSearchParams();
     const generateImageUploadUrl = useMutation(
         api.imageupload.generateImageUploadUrl
