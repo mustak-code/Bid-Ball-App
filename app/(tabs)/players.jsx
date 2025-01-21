@@ -9,6 +9,7 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
+    Image,
     RefreshControl,
     Text,
     View,
@@ -18,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LoadingIcon, PlusIcon } from "../../assets/icons/Icons";
 import Header from "../../components/Header";
 import IconsButton from "../../components/IconsButton";
+import InfoView from "../../components/InfoView";
 import PlayerCard from "../../components/PlayerCard";
 import { api } from "../../convex/_generated/api";
 import useStore from "../../store/store";
@@ -137,7 +139,55 @@ const Players = () => {
                         snapPoints={snapPoints}
                     >
                         <BottomSheetView className="flex-1 p-4">
-                            <Text>Awesome 🎉</Text>
+                            <View className="flex-row gap-4">
+                                <Image
+                                    source={{ uri: playerInfo?.dp }}
+                                    style={{
+                                        width: 100,
+                                        height: 100,
+                                        borderRadius: 6,
+                                    }}
+                                />
+                                <View>
+                                    <Text className="text-xl font-Do font-normal text-textColor mb-2">
+                                        {playerInfo?.name}
+                                    </Text>
+                                    <Text className="text-base font-Do font-normal text-textColor mb-2">
+                                        {playerInfo?.genre}
+                                    </Text>
+                                    <Text className="text-base font-Do font-normal text-textColor mb-2">
+                                        {playerInfo?.handed}
+                                    </Text>
+                                </View>
+                            </View>
+
+                            <Text className="text-xl font-Do font-normal text-textColor my-3">
+                                Information
+                            </Text>
+
+                            <View>
+                                <InfoView label="Age" data={playerInfo?.age} />
+                                <InfoView
+                                    label="Location"
+                                    data={playerInfo?.location}
+                                />
+                                <InfoView
+                                    label="Total Match Played"
+                                    data={playerInfo?.totalMatchPlayed}
+                                />
+                                <InfoView
+                                    label="Phone Number"
+                                    data={playerInfo?.mobile}
+                                />
+                                <InfoView
+                                    label="Email"
+                                    data={playerInfo?.email}
+                                />
+                                <InfoView
+                                    label="Minimum Bid Amount"
+                                    data={playerInfo?.minimunBidAmount}
+                                />
+                            </View>
                         </BottomSheetView>
                     </BottomSheetModal>
                 </SafeAreaView>
