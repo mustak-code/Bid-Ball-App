@@ -62,9 +62,6 @@ const Players = () => {
         bottomSheetModalRef.current?.present();
     }, [currentPlayerSelected]);
     const snapPoints = useMemo(() => ["50%", "90%"], []);
-
-    console.log(playerInfo);
-
     return (
         <GestureHandlerRootView>
             <BottomSheetModalProvider>
