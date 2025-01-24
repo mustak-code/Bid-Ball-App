@@ -13,7 +13,7 @@ const signup = () => {
                 contentContainerStyle={{ flexGrow: 1 }}
                 showsVerticalScrollIndicator={false}
             >
-                <Form type="Sign Up" />
+                <Form keyvalue="signup" type="Sign Up" />
             </ScrollView>
         </SafeAreaView>
     );

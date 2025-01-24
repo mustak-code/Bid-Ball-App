@@ -21,7 +21,7 @@ import FormBottomText from "./FormBottomText";
 import IconInput from "./IconInput";
 import PrimaryBtn from "./PrimaryBtn";
 
-const Form = ({ type }) => {
+const Form = ({ type, keyvalue }) => {
     const [checkedValue, setCheckedValue] = useState("");
     const registerUser = useMutation(api.auth.createUser);
     const updateVerificationCode = useMutation(api.auth.updateVerificationCode);
@@ -213,7 +213,7 @@ const Form = ({ type }) => {
     };
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback key={keyvalue} onPress={Keyboard.dismiss}>
             <View className="">
                 <LottieView
                     source={require("../assets/lottie-files/signup.json")}

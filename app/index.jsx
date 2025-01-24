@@ -29,12 +29,9 @@ export default function Index() {
                     source={footBallLottie}
                 />
                 <View className="items-center justify-center w-full px-10 gap-5">
+                    <CustomButton link="/login" label="Continue as Authority" />
                     <CustomButton
-                        link="/signup"
-                        label="Continue as Authority"
-                    />
-                    <CustomButton
-                        link="/signup"
+                        link="/login"
                         label="Continue as Team Manager"
                     />
                     <CustomButton link="/home" label="Continue as Guest" />
