@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -29,13 +30,18 @@ const DATA = [
 
 export default function Home() {
     const { user } = useStore((store) => store);
+    const router = useRouter();
 
     return (
         <SafeAreaView className="bg-white h-full w-full">
             <Header text="Bid Ball" />
             <View className="px-4">
                 {user?.role === "Authority" && (
-                    <IconsButton Icon={PlusIcon} text={"Create a League"} />
+                    <IconsButton
+                        Icon={PlusIcon}
+                        onpress={() => router.push("/league/addLeague")}
+                        text={"Create a League"}
+                    />
                 )}
             </View>
             <View className="px-4 mt-4">

@@ -29,6 +29,7 @@ export default defineSchema({
         addedBy: v.id("users"),
     }).index("by_email", ["email"]),
     leagues: defineTable({
+        leagueImage: v.optional(v.string()),
         leagueName: v.string(),
         leagueLocation: v.string(),
         organizer: v.string(),
@@ -38,5 +39,6 @@ export default defineSchema({
         players: v.array(v.id("players")),
         teamSize: v.number(),
         createdBy: v.id("users"),
+        isPanding: v.boolean(),
     }),
 });

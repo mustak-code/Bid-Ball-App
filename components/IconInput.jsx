@@ -9,6 +9,7 @@ const IconInput = ({
     className,
     value,
     keyboardType,
+    onpress,
 }) => {
     return (
         <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
@@ -19,6 +20,7 @@ const IconInput = ({
                 onChangeText={onType}
                 placeholder={placeholder}
                 value={value}
+                onPress={onpress}
                 className={`py-3 text-sm w-full text-textColor font-dmBold ${className}`}
                 secureTextEntry={type === "password" ? true : false}
                 keyboardType={keyboardType ? keyboardType : "default"}

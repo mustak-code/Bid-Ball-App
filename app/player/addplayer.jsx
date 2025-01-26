@@ -8,12 +8,10 @@ import {
     Image,
     ScrollView,
     Text,
-    TouchableOpacity,
     View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
-    AttachmentIcon,
     DollarIcon,
     EmailIcon,
     HashIcon,
@@ -22,6 +20,7 @@ import {
     PlusIcon,
     ProfileIcon,
 } from "../../assets/icons/Icons";
+import AddImageBtn from "../../components/AddImageBtn";
 import Checkbox from "../../components/Checkbox";
 import Header from "../../components/Header";
 import IconInput from "../../components/IconInput";
@@ -202,7 +201,7 @@ const AddPlayer = () => {
                                 className="w-[100px] h-[100px] aspect-square rounded-md"
                             />
                         ))}
-                    <View>
+                    {/* <View>
                         <Text className="font-Do text-xl text-textColor mb-3">
                             Add Image
                         </Text>
@@ -215,7 +214,8 @@ const AddPlayer = () => {
                                 Attach Image (png, Jpeg)
                             </Text>
                         </TouchableOpacity>
-                    </View>
+                    </View> */}
+                    <AddImageBtn onpress={handleProfileUpload} />
                 </View>
                 <Text className="font-Do text-xl text-textColor py-3">
                     Player Detail’s
