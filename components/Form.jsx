@@ -63,7 +63,7 @@ const Form = ({ type, keyvalue }) => {
             if (!formData.password || !validatePassword(formData.password)) {
                 Alert.alert(
                     "Please enter a password",
-                    "Password must Have \n At least one uppercase letter \nAt least one lowercase letter\nAt least one digit\nAt least one special character\nEnsures the password is at least 8 characters long"
+                    "Password must Have \n At least one uppercase letter \nAt least one lowercase letter\nAt least one digit\nAt least one special character\nEnsures the password is at least 8 character's long"
                 );
                 return;
             }
