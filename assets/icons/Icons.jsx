@@ -1,5 +1,5 @@
 import * as React from "react";
-import Svg, { Circle, G, Path } from "react-native-svg";
+import Svg, { Circle, G, Path, Rect } from "react-native-svg";
 export const Play = (props) => (
     <Svg
         xmlns="http://www.w3.org/2000/svg"
@@ -478,5 +478,130 @@ export const LoadingIcon = (props) => (
         {...props}
     >
         <Path d="M12 2v4M16.2 7.8l2.9-2.9M18 12h4M16.2 16.2l2.9 2.9M12 18v4M4.9 19.1l2.9-2.9M2 12h4M4.9 4.9l2.9 2.9" />
+    </Svg>
+);
+
+export const LeagueFeeIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6C4BA4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-wallet-cards"
+        {...props}
+    >
+        <Rect width={18} height={18} x={3} y={3} rx={2} />
+        <Path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2M3 11h3c.8 0 1.6.3 2.1.9l1.1.9c1.6 1.6 4.1 1.6 5.7 0l1.1-.9c.5-.5 1.3-.9 2.1-.9H21" />
+    </Svg>
+);
+
+export const PlayIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6C4BA4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-play"
+        {...props}
+    >
+        <Path d="m6 3 14 9-14 9V3z" />
+    </Svg>
+);
+
+export const EndingIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6C4BA4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-flag-triangle-right"
+        {...props}
+    >
+        <Path d="M7 22V2l10 5-10 5" />
+    </Svg>
+);
+
+export const LeagueNameIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6C4BA4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-notepad-text"
+        {...props}
+    >
+        <Path d="M8 2v4M12 2v4M16 2v4" />
+        <Rect width={16} height={18} x={4} y={4} rx={2} />
+        <Path d="M8 10h6M8 14h8M8 18h5" />
+    </Svg>
+);
+
+export const OrganizerIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6C4BA4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-dock"
+        {...props}
+    >
+        <Path d="M2 8h20" />
+        <Rect width={20} height={16} x={2} y={4} rx={2} />
+        <Path d="M6 16h12" />
+    </Svg>
+);
+
+export const TeamSIzeIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={16}
+        height={16}
+        fill="none"
+        {...props}
+    >
+        <Path
+            stroke="#6C4BA4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.333}
+            d="M10.667 14v-1.333A2.667 2.667 0 0 0 8 10H4a2.667 2.667 0 0 0-2.667 2.667V14M6 7.333A2.667 2.667 0 1 0 6 2a2.667 2.667 0 0 0 0 5.333ZM14.667 14v-1.334a2.666 2.666 0 0 0-2-2.58M10.667 2.086a2.666 2.666 0 0 1 0 5.167"
+        />
+    </Svg>
+);
+
+export const DeleteIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6d4ca4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-trash-2"
+        {...props}
+    >
+        <Path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />
     </Svg>
 );

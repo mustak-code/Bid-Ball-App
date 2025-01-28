@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as auth from "../auth.js";
 import type * as imageupload from "../imageupload.js";
+import type * as leagues from "../leagues.js";
 import type * as player from "../player.js";
 
 /**
@@ -28,6 +29,7 @@ import type * as player from "../player.js";
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   imageupload: typeof imageupload;
+  leagues: typeof leagues;
   player: typeof player;
 }>;
 export declare const api: FilterApi<

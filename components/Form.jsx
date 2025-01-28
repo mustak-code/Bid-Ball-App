@@ -246,11 +246,11 @@ const Form = ({ type, keyvalue }) => {
                                     text="Team Manager"
                                     value={checkedValue}
                                 />
-                                <Checkbox
+                                {/* <Checkbox
                                     onClick={() => setCheckedValue("Player")}
                                     text="Player"
                                     value={checkedValue}
-                                />
+                                /> */}
                             </View>
                         </>
                     )}

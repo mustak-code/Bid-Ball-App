@@ -156,11 +156,13 @@ const ProfileComponent = () => {
                     </Text>
                 </View>
 
-                <TouchableOpacity className="p-2 bg-primary rounded-md">
-                    <Text className="text-sm text-white font-dmRegular">
-                        See Pending League’s (0)
-                    </Text>
-                </TouchableOpacity>
+                {user?.role === "Authority" && (
+                    <TouchableOpacity className="p-2 bg-primary rounded-md">
+                        <Text className="text-sm text-white font-dmRegular">
+                            See Pending League’s (0)
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
 
             <View className="mt-5">
