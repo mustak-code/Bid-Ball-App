@@ -40,6 +40,29 @@ const AddLeague = () => {
     );
     const getImageUrl = useMutation(api.imageupload.getImageUrl);
     const [who, setWho] = useState("");
+    const [isSearchEnabled, setIsSearchEnabled] = useState(false);
+    const [players, setPlayers] = useState([
+        {
+            id: 1,
+            name: "Player1",
+        },
+        {
+            id: 2,
+            name: "Player1",
+        },
+        {
+            id: 3,
+            name: "Player1",
+        },
+        {
+            id: 4,
+            name: "Player1",
+        },
+        {
+            id: 5,
+            name: "Player1",
+        },
+    ]);
     const [isLoading, setIsLoading] = useState(false);
     const [leagueInfo, setLeagueInfo] = useState({
         leagueImage: "",
@@ -49,12 +72,7 @@ const AddLeague = () => {
         leagueFee: "",
         startingDate: "",
         endingDate: "",
-        players: [
-            {
-                id: 1,
-                name: "Player1",
-            },
-        ],
+        players: [],
         teamSize: "",
         createdBy: "",
     });
@@ -111,6 +129,7 @@ const AddLeague = () => {
                 className="p-5"
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 90 }}
                 showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}
             >
                 <View className="pb-3">
                     {assets &&
@@ -198,40 +217,72 @@ const AddLeague = () => {
                         </Text>
                     </TouchableOpacity>
 
-                    <IconInput
-                        Icon={ProfileIcon}
-                        placeholder="Players"
-                        type="text"
-                        value={who}
-                        onType={(who) => setWho(who)}
-                    />
+                    <View className="relative">
+                        <IconInput
+                            Icon={ProfileIcon}
+                            placeholder="Players"
+                            type="text"
+                            value={who}
+                            onpress={() => setIsSearchEnabled(true)}
+                            onBlur={() => setIsSearchEnabled(false)}
+                            onType={(who) => setWho(who)}
+                        />
 
-                    <View className="pl-6">
-                        <View className="flex-row gap-3 justify-between">
-                            <View className="flex-row gap-3">
-                                {assets && (
-                                    <Image
-                                        source={{
-                                            uri: assets[0].uri,
-                                        }}
-                                        className=" h-14 w-14  rounded-md"
-                                    />
-                                )}
-                                <View>
-                                    <Text className="font-Do text-base">
-                                        Mustak Ahmed Khan
-                                    </Text>
-                                    <Text className="font-dmRegular text-sm">
-                                        All Rounder
-                                    </Text>
-                                </View>
+                        {isSearchEnabled && (
+                            <View className="absolute top-full bg-white w-full z-20 h-auto max-h-[300px] p-4">
+                                <Text>Not Found</Text>
+                                <IconsButton
+                                    isLoading={isLoading}
+                                    Icon={PlusIcon}
+                                    text="Add Player First"
+                                />
                             </View>
-
-                            <TouchableOpacity>
-                                <DeleteIcon />
-                            </TouchableOpacity>
-                        </View>
+                        )}
                     </View>
+
+                    {players?.length > 0 && players ? (
+                        <ScrollView
+                            contentContainerStyle={{ flexGrow: 1 }}
+                            className="pl-6 h-[300px]"
+                            nestedScrollEnabled={true}
+                        >
+                            {players?.map((player) => (
+                                <View
+                                    key={player.id}
+                                    className="flex-row gap-3 justify-between bg-primary/10 p-2 rounded-lg mb-3"
+                                >
+                                    <View className="flex-row gap-3">
+                                        {assets && (
+                                            <Image
+                                                source={{
+                                                    uri: assets[0].uri,
+                                                }}
+                                                className=" h-14 w-14  rounded-md"
+                                            />
+                                        )}
+                                        <View>
+                                            <Text className="font-Do text-base">
+                                                Mustak Ahmed Khan
+                                            </Text>
+                                            <Text className="font-dmRegular text-sm">
+                                                All Rounder
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <TouchableOpacity>
+                                        <DeleteIcon />
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                        </ScrollView>
+                    ) : (
+                        <View className="pl-6">
+                            <Text className="font-dmRegular text-sm">
+                                No Player Selected
+                            </Text>
+                        </View>
+                    )}
 
                     <IconInput
                         Icon={TeamSIzeIcon}
