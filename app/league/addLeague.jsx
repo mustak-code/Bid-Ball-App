@@ -1,5 +1,5 @@
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
-import { useMutation } from "convex/react";
+import { useConvex, useMutation } from "convex/react";
 import { useAssets } from "expo-asset";
 import React, { useState } from "react";
 import {
@@ -39,6 +39,7 @@ const AddLeague = () => {
         api.imageupload.generateImageUploadUrl
     );
     const getImageUrl = useMutation(api.imageupload.getImageUrl);
+    const convex = useConvex();
     const [who, setWho] = useState("");
     const [isSearchEnabled, setIsSearchEnabled] = useState(false);
     const [players, setPlayers] = useState([
@@ -119,6 +120,14 @@ const AddLeague = () => {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleOnSearch = async () => {
+        setIsSearchEnabled(true);
+        const data = await convex.query(api.player.searchPlayer, {
+            name: "shah",
+        });
+        console.log(data);
     };
 
     return (
@@ -223,7 +232,7 @@ const AddLeague = () => {
                             placeholder="Players"
                             type="text"
                             value={who}
-                            onpress={() => setIsSearchEnabled(true)}
+                            onpress={handleOnSearch}
                             onBlur={() => setIsSearchEnabled(false)}
                             onType={(who) => setWho(who)}
                         />

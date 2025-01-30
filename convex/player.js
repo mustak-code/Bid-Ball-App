@@ -103,3 +103,18 @@ export const updatePlayer = mutation({
         };
     },
 });
+
+export const searchPlayer = query({
+    args: {
+        name: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const player = await ctx.db
+            .query("players")
+            .withSearchIndex("search_by_name", (q) =>
+                q.search("name", args.name)
+            )
+            .collect();
+        return player;
+    },
+});

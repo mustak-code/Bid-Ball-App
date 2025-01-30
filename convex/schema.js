@@ -27,7 +27,11 @@ export default defineSchema({
         email: v.string(),
         minimunBidAmount: v.string(),
         addedBy: v.id("users"),
-    }).index("by_email", ["email"]),
+    })
+        .index("by_email", ["email"])
+        .searchIndex("search_by_name", {
+            searchField: "name",
+        }),
     leagues: defineTable({
         leagueImage: v.optional(v.string()),
         leagueName: v.string(),
