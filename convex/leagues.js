@@ -6,16 +6,16 @@ export const createLeague = mutation({
         leagueName: v.string(),
         leagueLocation: v.string(),
         organizer: v.string(),
-        leagueFee: v.number(),
+        leagueFee: v.string(),
         startingDate: v.string(),
         endingDate: v.string(),
         players: v.array(v.id("players")),
-        teamSize: v.number(),
+        teamSize: v.string(),
         createdBy: v.id("users"),
         isPanding: v.boolean(),
     },
     handler: async (ctx, args) => {
-        await ctx.db.insert("leagues", {
+        const id = await ctx.db.insert("leagues", {
             leagueImage: args.leagueImage,
             leagueName: args.leagueName,
             leagueLocation: args.leagueLocation,
@@ -32,6 +32,7 @@ export const createLeague = mutation({
         return {
             success: true,
             message: "League Created Successfully",
+            leageId: id,
         };
     },
 });

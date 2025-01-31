@@ -16,6 +16,7 @@ import type {
 import type * as auth from "../auth.js";
 import type * as imageupload from "../imageupload.js";
 import type * as leagues from "../leagues.js";
+import type * as notification from "../notification.js";
 import type * as player from "../player.js";
 
 /**
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   imageupload: typeof imageupload;
   leagues: typeof leagues;
+  notification: typeof notification;
   player: typeof player;
 }>;
 export declare const api: FilterApi<

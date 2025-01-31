@@ -151,3 +151,42 @@ export const updateUser = mutation({
         return newUser;
     },
 });
+
+export const getUserByRole = query({
+    args: {
+        role: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_role", (q) => q.eq("role", args.role))
+            .collect();
+        return user;
+    },
+});
+
+export const updateAdminNotifications = mutation({
+    args: {
+        notification: v.id("notification"),
+    },
+    handler: async (ctx, args) => {
+        const admins = await ctx.db
+            .query("users")
+            .withIndex("by_role", (q) => q.eq("role", "Admin"))
+            .collect();
+
+        for (const admin of admins) {
+            await ctx.db.patch(admin._id, {
+                notifications: [
+                    ...(admin.notifications ?? []),
+                    args.notification,
+                ],
+            });
+        }
+
+        return {
+            success: true,
+            message: `${admins.length} admin notifications updated successfully`,
+        };
+    },
+});
