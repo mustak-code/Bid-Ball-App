@@ -190,3 +190,15 @@ export const updateAdminNotifications = mutation({
         };
     },
 });
+export const getUserbyId = query({
+    args: {
+        userId: v.id("users"),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_id", (q) => q.eq("_id", args.userId))
+            .first();
+        return user;
+    },
+});
