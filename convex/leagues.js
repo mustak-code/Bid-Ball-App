@@ -37,6 +37,11 @@ export const createLeague = mutation({
     },
 });
 
+export const getAllLeagues = query(async (ctx, args) => {
+    const allLeagues = await ctx.db.query("leagues").collect();
+    return allLeagues;
+});
+
 export const getLeagues = query(async (ctx, args) => {
     const leagues = await ctx.db
         .query("leagues")
@@ -53,6 +58,19 @@ export const getLeaguesByAuthor = query({
             .query("leagues")
             .withIndex("by_author", (q) => q.eq("createdBy", args.userId))
             .collect();
+        return league;
+    },
+});
+
+export const getSingleLeague = query({
+    args: {
+        leagueId: v.id("leagues"),
+    },
+    handler: async (ctx, args) => {
+        const league = await ctx.db
+            .query("leagues")
+            .withIndex("by_id", (q) => q.eq("_id", args.leagueId))
+            .first();
         return league;
     },
 });

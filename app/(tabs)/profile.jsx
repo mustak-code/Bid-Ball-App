@@ -50,7 +50,9 @@ const profile = () => {
         <SafeAreaView className="h-full bg-white">
             <Header
                 text={
-                    user?.role === "Authority" || user?.role === "Team Manager"
+                    user?.role === "Authority" ||
+                    user?.role === "Team Manager" ||
+                    user?.role === "Admin"
                         ? "Profile"
                         : "Guest Mode"
                 }

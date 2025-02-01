@@ -1,7 +1,8 @@
 import { useConvex, useMutation } from "convex/react";
 import { useAssets } from "expo-asset";
 
-import React, { useRef, useState } from "react";
+import { useRouter } from "expo-router";
+import React, { useEffect, useRef, useState } from "react";
 import {
     ActivityIndicator,
     Alert,
@@ -25,7 +26,9 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
     const [profileImage, setProfileImage] = useState(null);
     const [isFocused, setIsFocused] = useState(false);
     const [phone, setPhone] = useState("");
+    const [allLeagues, setAllLeagues] = useState([]);
     const convex = useConvex();
+    const router = useRouter();
     const generateImageUploadUrl = useMutation(
         api.imageupload.generateImageUploadUrl
     );
@@ -37,6 +40,7 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
 
     const [assets, error] = useAssets([
         require("../assets/images/Profile_avatar_placeholder_large.png"),
+        require("../assets/images/ball.png"),
     ]);
     const phoneRef = useRef(null);
 
@@ -109,10 +113,26 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
         setUser(null);
     };
 
-    console.log(pendingLEagues.length);
+    useEffect(() => {
+        const getAllLeagues = async () => {
+            const allLeagues = await convex.query(api.leagues.getAllLeagues);
+
+            const pendingLeagues = allLeagues.reduce((prev, curr) => {
+                if (curr.isPanding) {
+                    prev.push(curr);
+                }
+                return prev;
+            }, []);
+
+            setAllLeagues(pendingLeagues);
+        };
+        getAllLeagues();
+    }, [convex]);
+
+    console.log(allLeagues.length);
 
     return (
-        <ScrollView className="px-4">
+        <ScrollView className="px-4" nestedScrollEnabled={true}>
             <View className="flex-row items-center w-[100px] h-[100px] justify-center mt-12 relative mx-auto">
                 {assets ? (
                     isLoading ? (
@@ -172,9 +192,64 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
                         </TouchableOpacity>
                     </View>
                 )}
+                {user?.role === "Admin" && (
+                    <TouchableOpacity
+                        onPress={handleSignOut}
+                        className="p-2 bg-primary rounded-md mb-1"
+                    >
+                        <Text className="text-sm text-white font-dmRegular">
+                            Sign out
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
 
-            {user?.role === "Admin" ? null : (
+            {user?.role === "Admin" ? (
+                <View>
+                    <Text className="text-base text-black font-Do my-3">
+                        ({allLeagues?.length}) Pending League’s Request
+                    </Text>
+                    {allLeagues.map((allLeague) => (
+                        <View
+                            key={allLeague._id}
+                            className={`flex-row gap-3 items-center justify-between bg-primary/10 p-2 rounded-lg mb-3`}
+                        >
+                            <View className="flex-row gap-3">
+                                {assets && (
+                                    <Image
+                                        source={{
+                                            uri: allLeague?.leagueImage
+                                                ? allLeague.leagueImage
+                                                : assets[1].uri,
+                                        }}
+                                        className="h-14 w-14 rounded-md"
+                                    />
+                                )}
+                                <View>
+                                    <Text className="font-Do text-base">
+                                        {allLeague.leagueName}
+                                    </Text>
+                                    <Text className="font-dmRegular text-sm">
+                                        {allLeague.organizer}
+                                    </Text>
+                                </View>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    router.push(
+                                        `/leagueapproval/${allLeague._id}`
+                                    )
+                                }
+                                className="p-2 bg-primary rounded-md mb-1"
+                            >
+                                <Text className="text-sm text-white font-dmRegular">
+                                    Approve
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    ))}
+                </View>
+            ) : (
                 <View className="mt-5">
                     <Text className="font-Do text-xl py-2">Info:</Text>
                     <Text className="font-dmRegular text-base">
@@ -215,11 +290,13 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
                 </View>
             )}
 
-            <IconsButton
-                onpress={handleSignOut}
-                Icon={SignoutIcon}
-                text="Sign out"
-            />
+            {user?.role !== "Admin" && (
+                <IconsButton
+                    onpress={handleSignOut}
+                    Icon={SignoutIcon}
+                    text="Sign out"
+                />
+            )}
         </ScrollView>
     );
 };
