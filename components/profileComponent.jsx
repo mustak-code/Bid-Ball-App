@@ -20,7 +20,7 @@ import storeImageToDb from "../utils/storeImageToDB";
 import uplaodImage from "../utils/uplaodImage";
 import IconsButton from "./IconsButton";
 
-const ProfileComponent = () => {
+const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [profileImage, setProfileImage] = useState(null);
     const [isFocused, setIsFocused] = useState(false);
@@ -109,6 +109,8 @@ const ProfileComponent = () => {
         setUser(null);
     };
 
+    console.log(pendingLEagues.length);
+
     return (
         <ScrollView className="px-4">
             <View className="flex-row items-center w-[100px] h-[100px] justify-center mt-12 relative mx-auto">
@@ -157,52 +159,61 @@ const ProfileComponent = () => {
                 </View>
 
                 {user?.role === "Authority" && (
-                    <TouchableOpacity className="p-2 bg-primary rounded-md">
-                        <Text className="text-sm text-white font-dmRegular">
-                            See Pending League’s (0)
-                        </Text>
-                    </TouchableOpacity>
+                    <View>
+                        <TouchableOpacity className="p-2 bg-primary rounded-md mb-1">
+                            <Text className="text-sm text-white font-dmRegular">
+                                ({pendingLEagues?.length}) Pending League’s
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="p-2 bg-primary rounded-md">
+                            <Text className="text-sm text-white font-dmRegular">
+                                ({approvedLeages?.length}) Approved League’s
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 )}
             </View>
 
-            <View className="mt-5">
-                <Text className="font-Do text-xl py-2">Info:</Text>
-                <Text className="font-dmRegular text-base">
-                    Email: {user?.email}
-                </Text>
-                {user?.phone ? (
+            {user?.role === "Admin" ? null : (
+                <View className="mt-5">
+                    <Text className="font-Do text-xl py-2">Info:</Text>
                     <Text className="font-dmRegular text-base">
-                        Phone: {user?.phone}
+                        Email: {user?.email}
                     </Text>
-                ) : (
-                    <View className="flex-row items-center">
+                    {user?.phone ? (
                         <Text className="font-dmRegular text-base">
-                            Phone:{" "}
+                            Phone: {user?.phone}
                         </Text>
-                        <TextInput
-                            value={phone}
-                            className="text-base font-dmRegular"
-                            ref={phoneRef}
-                            onChangeText={handleOnChangePhone}
-                        />
-                        {isLoading ? (
-                            <ActivityIndicator />
-                        ) : (
-                            <TouchableOpacity onPress={handlePhone}>
-                                <Text className="text-base font-dmRegular text-primary">
-                                    Add Phone
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                )}
-                {!user?.phone && (
-                    <Text className="text-xs text-textColor">
-                        Please Add phone number carefully you can't change it
-                        again
-                    </Text>
-                )}
-            </View>
+                    ) : (
+                        <View className="flex-row items-center">
+                            <Text className="font-dmRegular text-base">
+                                Phone:{" "}
+                            </Text>
+                            <TextInput
+                                value={phone}
+                                className="text-base font-dmRegular"
+                                ref={phoneRef}
+                                onChangeText={handleOnChangePhone}
+                            />
+                            {isLoading ? (
+                                <ActivityIndicator />
+                            ) : (
+                                <TouchableOpacity onPress={handlePhone}>
+                                    <Text className="text-base font-dmRegular text-primary">
+                                        Add Phone
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    )}
+                    {!user?.phone && (
+                        <Text className="text-xs text-textColor">
+                            Please Add phone number carefully you can't change
+                            it again
+                        </Text>
+                    )}
+                </View>
+            )}
 
             <IconsButton
                 onpress={handleSignOut}

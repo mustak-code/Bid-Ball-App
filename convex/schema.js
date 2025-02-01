@@ -46,7 +46,9 @@ export default defineSchema({
         teamSize: v.string(),
         createdBy: v.id("users"),
         isPanding: v.boolean(),
-    }),
+    })
+        .index("by_approval", ["isPanding"])
+        .index("by_author", ["createdBy"]),
     notification: defineTable({
         userId: v.id("users"),
         LeagueId: v.id("leagues"),

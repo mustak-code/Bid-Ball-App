@@ -1,36 +1,36 @@
+import { useConvex } from "convex/react";
 import { useRouter } from "expo-router";
-import React from "react";
-import { FlatList, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PlusIcon } from "../../assets/icons/Icons";
 import Header from "../../components/Header";
 import Heading from "../../components/Heading";
 import IconsButton from "../../components/IconsButton";
 import League from "../../components/League";
+import { api } from "../../convex/_generated/api";
 import useStore from "../../store/store";
-
-const DATA = [
-    {
-        id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-        title: "First Item",
-    },
-    {
-        id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-        title: "Second Item",
-    },
-    {
-        id: "58694a0f-3da1-471f-bd96-145571e29d72",
-        title: "Third Item",
-    },
-    {
-        id: "5869dsd4a0f-3da1-471f-bd96-145571e29d72",
-        title: "Third Item",
-    },
-];
-
 export default function Home() {
     const { user } = useStore((store) => store);
     const router = useRouter();
+    const [leagues, setLeauges] = useState([]);
+    const convex = useConvex();
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const getLeagues = async () => {
+            setIsLoading(true);
+            try {
+                const eachLeague = await convex.query(api.leagues.getLeagues);
+                setLeauges(eachLeague);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        getLeagues();
+    }, [convex, api.leagues.getLeagues]);
 
     return (
         <SafeAreaView className="bg-white h-full w-full">
@@ -45,32 +45,29 @@ export default function Home() {
                 )}
             </View>
             <View className="px-4 mt-4">
-                <FlatList
-                    renderItem={(renderItem) => {
-                        return <League key={renderItem.item.id} />;
-                    }}
-                    data={DATA}
-                    keyExtractor={(item) => item.id}
-                    ListHeaderComponent={() => (
-                        <Heading
-                            text={
-                                user?.role === "Authority" ||
-                                user?.role === "Team Manager"
-                                    ? "My League's"
-                                    : "On Going League’s"
-                            }
-                        />
-                    )}
-                    ItemSeparatorComponent={(item) => (
-                        <View key={item} className="py-2"></View>
-                    )}
-                    contentContainerStyle={{
-                        flexGrow: 1,
-                        paddingBottom: 165,
-                    }}
-                    showsVerticalScrollIndicator={false}
-                    ListEmptyComponent={() => <Text> There no League </Text>}
-                />
+                {isLoading ? (
+                    <ActivityIndicator />
+                ) : (
+                    <FlatList
+                        data={leagues}
+                        keyExtractor={(item) => item._id}
+                        renderItem={({ item }) => (
+                            <League user={user} league={item} />
+                        )}
+                        ListHeaderComponent={() => (
+                            <Heading text="On Going League’s" />
+                        )}
+                        ItemSeparatorComponent={() => (
+                            <View className="py-2"></View>
+                        )}
+                        contentContainerStyle={{
+                            flexGrow: 1,
+                            paddingBottom: 165,
+                        }}
+                        showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={() => <Text>There no League</Text>}
+                    />
+                )}
             </View>
         </SafeAreaView>
     );
