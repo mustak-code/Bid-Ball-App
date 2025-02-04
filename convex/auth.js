@@ -190,6 +190,32 @@ export const updateAdminNotifications = mutation({
         };
     },
 });
+
+export const updateAuthorityNotifications = mutation({
+    args: {
+        notification: v.id("notification"),
+        authId: v.id("users"),
+    },
+    handler: async (ctx, args) => {
+        const authority = await ctx.db
+            .query("users")
+            .withIndex("by_id", (q) => q.eq("_id", args.authId))
+            .first();
+
+        await ctx.db.patch(authority._id, {
+            notifications: [
+                ...(authority.notifications ?? []),
+                args.notification,
+            ],
+        });
+
+        return {
+            success: true,
+            message: `authority notifications updated successfully`,
+        };
+    },
+});
+
 export const getUserbyId = query({
     args: {
         userId: v.id("users"),

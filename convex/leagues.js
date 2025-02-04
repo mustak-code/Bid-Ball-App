@@ -74,3 +74,19 @@ export const getSingleLeague = query({
         return league;
     },
 });
+
+export const approveLeage = mutation({
+    args: {
+        leagueId: v.id("leagues"),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.patch(args.leagueId, {
+            isPanding: false,
+        });
+
+        return {
+            success: true,
+            message: "League Approved Successfully",
+        };
+    },
+});

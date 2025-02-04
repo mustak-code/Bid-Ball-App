@@ -1,8 +1,15 @@
-import { useConvex } from "convex/react";
+import { useConvex, useMutation } from "convex/react";
 import { useAssets } from "expo-asset";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Image, ScrollView, Text, View } from "react-native";
+import {
+    ActivityIndicator,
+    Alert,
+    Image,
+    ScrollView,
+    Text,
+    View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
     EndingIcon,
@@ -18,11 +25,19 @@ import {
 import Header from "../../../components/Header";
 import IconsButton from "../../../components/IconsButton";
 import { api } from "../../../convex/_generated/api";
+import useStore from "../../../store/store";
 
 const LeagueApproval = () => {
     const { leagueapprovalId } = useLocalSearchParams();
     const convex = useConvex();
     const [leagueInfo, setLeagueInfo] = useState({});
+    const approveLeague = useMutation(api.leagues.approveLeage);
+    const createNotification = useMutation(api.notification.createNotification);
+    const updateAuthorityNotification = useMutation(
+        api.auth.updateAuthorityNotifications
+    );
+    const router = useRouter();
+    const { user } = useStore();
     const [isLoading, setIsLoading] = useState(false);
     const [assets, error] = useAssets([
         require("../../../assets/images/ball.png"),
@@ -45,6 +60,36 @@ const LeagueApproval = () => {
         };
         getLeague();
     }, [convex, leagueapprovalId]);
+
+    const handleOnApprove = async () => {
+        const approve = await approveLeague({
+            leagueId: leagueapprovalId,
+        });
+
+        const notificationId = await createNotification({
+            userId: user._id,
+            LeagueId: leagueapprovalId,
+            notificationText: `${user.name} approved your league`,
+        });
+
+        const isSucces = await updateAuthorityNotification({
+            authId: leagueInfo.createdBy,
+            notification: notificationId.notificationId,
+        });
+
+        if (!isSucces.success) {
+            return;
+        }
+
+        if (approve.success) {
+            Alert.alert(approve.message, "", [
+                {
+                    text: "Done",
+                    onPress: () => router.push(`/profile`),
+                },
+            ]);
+        }
+    };
 
     return (
         <SafeAreaView>
@@ -145,6 +190,7 @@ const LeagueApproval = () => {
                 </View>
                 <View className="pb-10 flex-row gap-3 w-full ">
                     <IconsButton
+                        onpress={handleOnApprove}
                         Icon={isLoading ? ActivityIndicator : PlusIcon}
                         isLoading={isLoading}
                         text="Approve"
