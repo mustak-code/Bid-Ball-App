@@ -90,3 +90,17 @@ export const approveLeage = mutation({
         };
     },
 });
+
+export const deleteLeague = mutation({
+    args: {
+        leagueId: v.id("leagues"),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.delete(args.leagueId);
+
+        return {
+            success: true,
+            message: "League Deleted Successfully",
+        };
+    },
+});

@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const createNotification = mutation({
     args: {
@@ -15,5 +15,24 @@ export const createNotification = mutation({
         });
 
         return { notificationId };
+    },
+});
+
+export const getAllNotifications = query({
+    args: {
+        userId: v.id("users"),
+    },
+    handler: async (ctx, args) => {
+        const notifications = await ctx.db
+            .query("notification")
+            .filter((query) => query.neq(query.field("userId"), args.userId))
+            .collect();
+        const populatedUserIds = await Promise.all(
+            notifications.map(async (notification) => {
+                const user = await ctx.db.get(notification.userId);
+                return { ...notification, user };
+            })
+        );
+        return populatedUserIds;
     },
 });

@@ -127,7 +127,7 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
             setAllLeagues(pendingLeagues);
         };
         getAllLeagues();
-    }, [convex]);
+    }, []);
 
     console.log(allLeagues.length);
 

@@ -30,66 +30,68 @@ import useStore from "../../../store/store";
 const LeagueApproval = () => {
     const { leagueapprovalId } = useLocalSearchParams();
     const convex = useConvex();
-    const [leagueInfo, setLeagueInfo] = useState({});
+    const [leagueInfo, setLeagueInfo] = useState(null);
     const approveLeague = useMutation(api.leagues.approveLeage);
     const createNotification = useMutation(api.notification.createNotification);
+    const deleteLeague = useMutation(api.leagues.deleteLeague);
     const updateAuthorityNotification = useMutation(
         api.auth.updateAuthorityNotifications
     );
     const router = useRouter();
     const { user } = useStore();
     const [isLoading, setIsLoading] = useState(false);
-    const [assets, error] = useAssets([
-        require("../../../assets/images/ball.png"),
-    ]);
+    const [assets] = useAssets([require("../../../assets/images/ball.png")]);
 
     useEffect(() => {
-        const getLeague = async () => {
-            setIsLoading(true);
+        const fetchLeague = async () => {
             try {
                 const league = await convex.query(api.leagues.getSingleLeague, {
                     leagueId: leagueapprovalId,
                 });
 
-                setLeagueInfo(league);
+                if (league) {
+                    setLeagueInfo(league);
+                }
             } catch (error) {
-                console.log(error);
-            } finally {
-                setIsLoading(false);
+                console.error("Error fetching league:", error);
             }
         };
-        getLeague();
-    }, [convex, leagueapprovalId]);
+        fetchLeague();
+    }, [leagueapprovalId]);
 
-    const handleOnApprove = async () => {
-        const approve = await approveLeague({
-            leagueId: leagueapprovalId,
-        });
+    const handleApproval = async (isApproved) => {
+        setIsLoading(true);
+        try {
+            const action = isApproved ? approveLeague : deleteLeague;
+            const result = await action({ leagueId: leagueapprovalId });
 
-        const notificationId = await createNotification({
-            userId: user._id,
-            LeagueId: leagueapprovalId,
-            notificationText: `${user.name} approved your league`,
-        });
+            if (!result.success) return;
 
-        const isSucces = await updateAuthorityNotification({
-            authId: leagueInfo.createdBy,
-            notification: notificationId.notificationId,
-        });
+            const notificationId = await createNotification({
+                userId: user._id,
+                LeagueId: leagueapprovalId,
+                notificationText: `${user.name} ${
+                    isApproved ? "approved" : "declined"
+                } your league`,
+            });
 
-        if (!isSucces.success) {
-            return;
-        }
+            await updateAuthorityNotification({
+                authId: leagueInfo?.createdBy,
+                notification: notificationId.notificationId,
+            });
 
-        if (approve.success) {
-            Alert.alert(approve.message, "", [
-                {
-                    text: "Done",
-                    onPress: () => router.push(`/profile`),
-                },
+            Alert.alert(result.message, "", [
+                { text: "Done", onPress: () => router.push(`/profile`) },
             ]);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    if (!leagueInfo) return <ActivityIndicator size="large" />;
+    console.log(leagueapprovalId);
 
     return (
         <SafeAreaView>
@@ -98,104 +100,71 @@ const LeagueApproval = () => {
                 className="p-5"
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 90 }}
                 showsVerticalScrollIndicator={false}
-                nestedScrollEnabled={true}
             >
                 <View className="pb-3">
-                    {assets &&
-                        (isLoading ? (
-                            <ActivityIndicator />
-                        ) : (
-                            <Image
-                                source={{
-                                    uri: leagueInfo?.leagueImage
-                                        ? leagueInfo.leagueImage
-                                        : assets[0].uri,
-                                }}
-                                className=" h-[150px] w-full  rounded-md"
-                            />
-                        ))}
+                    <Image
+                        source={{
+                            uri: leagueInfo.leagueImage || assets?.[0]?.uri,
+                        }}
+                        className="h-[150px] w-full rounded-md"
+                    />
                 </View>
+
                 <Text className="font-Do text-xl text-textColor py-3">
                     Information
                 </Text>
 
-                <View className="gap-3">
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <LeagueNameIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            League Name: {leagueInfo.leagueName}
+                {[
+                    {
+                        icon: <LeagueNameIcon />,
+                        text: `League Name: ${leagueInfo.leagueName}`,
+                    },
+                    {
+                        icon: <LocationBigIcon />,
+                        text: `Location: ${leagueInfo.leagueLocation}`,
+                    },
+                    {
+                        icon: <OrganizerIcon />,
+                        text: `Organizer: ${leagueInfo.organizer}`,
+                    },
+                    {
+                        icon: <LeagueFeeIcon />,
+                        text: `League Fee: ${leagueInfo.leagueFee}`,
+                    },
+                    {
+                        icon: <PlayIcon />,
+                        text: `Starting Date: ${new Date(leagueInfo.startingDate).toDateString()}`,
+                    },
+                    {
+                        icon: <EndingIcon />,
+                        text: `Ending Date: ${new Date(leagueInfo.endingDate).toDateString()}`,
+                    },
+                    { icon: <ProfileIcon />, text: `Players: TODO` },
+                    {
+                        icon: <TeamSIzeIcon />,
+                        text: `Team Size: ${leagueInfo.teamSize}`,
+                    },
+                ].map(({ icon, text }, index) => (
+                    <View
+                        key={index}
+                        className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3 mb-3"
+                    >
+                        <View>{icon}</View>
+                        <Text className="py-3 text-sm text-textColor font-dmBold">
+                            {text}
                         </Text>
                     </View>
+                ))}
 
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <LocationBigIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            Location {leagueInfo.leagueLocation}
-                        </Text>
-                    </View>
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <OrganizerIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            Organizer: {leagueInfo.organizer}
-                        </Text>
-                    </View>
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <LeagueFeeIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            League Fee: {leagueInfo.leagueFee}
-                        </Text>
-                    </View>
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <PlayIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            Starting Date:{" "}
-                            {new Date(leagueInfo.startingDate).toDateString()}
-                        </Text>
-                    </View>
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <EndingIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            Ending Date:{" "}
-                            {new Date(leagueInfo.endingDate).toDateString()}
-                        </Text>
-                    </View>
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <ProfileIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            Playes TODO::
-                        </Text>
-                    </View>
-                    <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
-                        <View>
-                            <TeamSIzeIcon />
-                        </View>
-                        <Text className="py-3 text-sm w-full text-textColor font-dmBold">
-                            Team Size: {leagueInfo.teamSize}
-                        </Text>
-                    </View>
-                </View>
-                <View className="pb-10 flex-row gap-3 w-full ">
+                <View className="pb-10 flex-row gap-3 w-full">
                     <IconsButton
-                        onpress={handleOnApprove}
+                        onpress={() => handleApproval(true)}
                         Icon={isLoading ? ActivityIndicator : PlusIcon}
                         isLoading={isLoading}
                         text="Approve"
                     />
                     <IconsButton
+                        onpress={() => handleApproval(false)}
                         Icon={isLoading ? ActivityIndicator : PlusIcon}
                         isLoading={isLoading}
                         text="Decline"

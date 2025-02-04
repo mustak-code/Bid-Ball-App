@@ -53,5 +53,5 @@ export default defineSchema({
         userId: v.id("users"),
         LeagueId: v.id("leagues"),
         notificationText: v.string(),
-    }),
+    }).index("by_user_id", ["userId"]),
 });
