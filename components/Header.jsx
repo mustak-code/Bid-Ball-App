@@ -24,24 +24,26 @@ const Header = ({ text, hideIcon }) => {
         };
 
         getNotifications();
-    }, [convex, user?._id]);
+    }, [user?._id]);
 
     return (
         <View className="flex-row items-center justify-between bg-primary py-6 rounded-b-xl shadow">
             <Text className="text-[32px] pl-4 font-Kalnia font-normal text-white">
                 {text}
             </Text>
-            {!hideIcon && (
-                <TouchableOpacity
-                    onPress={() => router.push("/notification")}
-                    className="pr-4 relative"
-                >
-                    <Text className="bg-red-400 absolute rounded-full w-5 h-5 items-center justify-center -top-3 -left-3 text-center">
-                        {userInfo?.notifications?.length || 0}
-                    </Text>
-                    <Bell />
-                </TouchableOpacity>
-            )}
+            {user?.role === "Authority" ||
+                user?.role == "Admin" ||
+                (user?.role === "Team Manager" && !hideIcon && (
+                    <TouchableOpacity
+                        onPress={() => router.push("/notification")}
+                        className="pr-4 relative"
+                    >
+                        <Text className="bg-red-400 absolute rounded-full w-5 h-5 items-center justify-center -top-3 -left-3 text-center">
+                            {userInfo?.notifications?.length || 0}
+                        </Text>
+                        <Bell />
+                    </TouchableOpacity>
+                ))}
         </View>
     );
 };

@@ -63,13 +63,23 @@ const League = ({ league, user }) => {
                         </Text>
                         <LinkArrow />
                     </TouchableOpacity>
-                ) : (
+                ) : user?.role === "Team Manager" ? (
                     <TouchableOpacity className="bg-primary px-3 rounded-md flex-row items-center">
                         <Text className="font-dmBold font-normal text-base text-white">
-                            Apply now
+                            Apply
                         </Text>
                         <LinkArrow />
                     </TouchableOpacity>
+                ) : (
+                    user?.role === "Admin" && (
+                        <TouchableOpacity className="bg-primary px-3 rounded-md flex-row items-center">
+                            <Text className="font-dmBold font-normal text-base text-white">
+                                Delete
+                            </Text>
+
+                            <LinkArrow />
+                        </TouchableOpacity>
+                    )
                 )}
             </View>
         </View>
