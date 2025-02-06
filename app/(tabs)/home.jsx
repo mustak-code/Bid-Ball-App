@@ -30,7 +30,7 @@ export default function Home() {
             }
         };
         getLeagues();
-    }, [convex, api.leagues.getLeagues]);
+    }, []);
 
     return (
         <SafeAreaView className="bg-white h-full w-full">

@@ -7,6 +7,7 @@ import {
     Alert,
     Keyboard,
     Text,
+    ToastAndroid,
     TouchableWithoutFeedback,
     View,
 } from "react-native";
@@ -199,12 +200,16 @@ const Form = ({ type, keyvalue }) => {
 
             setUser(user);
 
-            Alert.alert("LogIn Successfull", "", [
-                {
-                    text: "Done",
-                    onPress: () => router.push("/home"),
-                },
-            ]);
+            ToastAndroid.show("LogIn success", ToastAndroid.BOTTOM);
+
+            router.push("/home");
+
+            // Alert.alert("LogIn Successfull", "", [
+            //     {
+            //         text: "Done",
+            //         onPress: () => router.push("/home"),
+            //     },
+            // ]);
         } catch (e) {
             console.log(e);
         } finally {

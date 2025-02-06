@@ -202,6 +202,12 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
                         </Text>
                     </TouchableOpacity>
                 )}
+                {user?.role === "Team Manager" && (
+                    <View>
+                        <Text className="text-base font-Do">Balance</Text>
+                        <Text>0 ৳</Text>
+                    </View>
+                )}
             </View>
 
             {user?.role === "Admin" ? (
@@ -288,6 +294,13 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
                         </Text>
                     )}
                 </View>
+            )}
+            {user?.role === "Team Manager" && (
+                <TouchableOpacity className="p-2 bg-primary rounded-md mb-1 mt-3">
+                    <Text className="text-sm text-white font-dmRegular">
+                        ({pendingLEagues?.length}) My Leagues
+                    </Text>
+                </TouchableOpacity>
             )}
 
             {user?.role !== "Admin" && (

@@ -2,7 +2,7 @@ import { useMutation } from "convex/react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { useState } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import VerifyInput from "../../../components/verifyInput";
 import { api } from "../../../convex/_generated/api";
@@ -20,12 +20,8 @@ const verify = () => {
         });
 
         if (data?.success) {
-            Alert.alert("Thanks for verification", "", [
-                {
-                    text: "Done",
-                    onPress: () => router.push(`/login`),
-                },
-            ]);
+            ToastAndroid.show("Thanks for verification", ToastAndroid.BOTTOM);
+            router.push(`/login`);
         }
     };
 
