@@ -94,7 +94,7 @@ const Form = ({ type, keyvalue }) => {
             });
 
             const sentEmail = await fetch(
-                "https://cl4wch-8000.csb.app/send-mail",
+                "https://auction-email-sever.onrender.com/send-mail",
                 {
                     method: "POST",
                     headers: {
@@ -166,7 +166,7 @@ const Form = ({ type, keyvalue }) => {
                                     generateVerificationCode();
 
                                 await fetch(
-                                    "https://cl4wch-8000.csb.app/send-mail",
+                                    "https://auction-email-sever.onrender.com/send-mail",
                                     {
                                         method: "POST",
                                         headers: {
