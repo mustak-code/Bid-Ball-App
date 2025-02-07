@@ -12,7 +12,7 @@ export default defineSchema({
         profile: v.optional(v.string()),
         phone: v.optional(v.string()),
         notifications: v.optional(v.array(v.id("notification"))),
-        balance: v.optional(v.string()),
+        balance: v.optional(v.number()),
     })
         .index("by_email", ["email"])
         .index("by_email_password", ["password", "email"])

@@ -1,9 +1,10 @@
 import { useConvex } from "convex/react";
 import { useAssets } from "expo-asset";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
+    Alert,
     Image,
     ScrollView,
     Text,
@@ -26,6 +27,8 @@ const index = () => {
         require("../../../assets/images/ball.png"),
         require("../../../assets/images/Profile_avatar_placeholder_large.png"),
     ]);
+    const [updatetdUser, setUpdatetdUser] = useState({});
+    const router = useRouter();
 
     const convex = useConvex();
 
@@ -50,7 +53,45 @@ const index = () => {
         getData();
     }, [leaguedetails]);
 
-    console.log(leagueInfo);
+    useEffect(() => {
+        const getuser = async () => {
+            const upUser = await convex.query(api.auth.getUserbyId, {
+                userId: user._id,
+            });
+
+            console.log(upUser);
+
+            setUpdatetdUser(upUser);
+        };
+        getuser();
+    }, [user?._id]);
+
+    const purchaseLeague = async () => {
+        if (!updatetdUser?._id) {
+            Alert.alert("Please login to purchase this league");
+            return;
+        }
+
+        if (!updatetdUser?.balance && updatetdUser?.balance < 500) {
+            Alert.alert(
+                "Not enough balance to purchase this league",
+                "Deposit Now",
+                [
+                    {
+                        text: "Deposit",
+                        onPress: () => {
+                            router.push("/payment");
+                        },
+                    },
+                ]
+            );
+            return;
+        }
+
+        console.log("Purchasing league");
+    };
+
+    console.log(updatetdUser);
 
     return (
         <SafeAreaView>
@@ -145,6 +186,7 @@ const index = () => {
                     {user?.role === "Team Manager" && (
                         <View className="pb-10">
                             <IconsButton
+                                onpress={purchaseLeague}
                                 Icon={isLoading ? ActivityIndicator : PlusIcon}
                                 isLoading={isLoading}
                                 text="Apply"
