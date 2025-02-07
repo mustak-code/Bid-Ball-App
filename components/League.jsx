@@ -1,6 +1,7 @@
 import { useAssets } from "expo-asset";
 
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import {
     ArrowRight,
     Flag,
@@ -11,20 +12,23 @@ import {
 
 const League = ({ league, user }) => {
     const [assets, error] = useAssets([require("../assets/images/ball.png")]);
+    const router = useRouter();
 
     return (
         <View className="bg-cardBg p-3 rounded-xl">
-            {assets ? (
-                <Image
-                    source={{ uri: league.leagueImage || assets[0].uri }}
-                    contentFit="cover"
-                    style={{
-                        width: "100%",
-                        height: 150,
-                        borderRadius: 6,
-                    }}
-                />
-            ) : null}
+            <Pressable onPress={() => router.push(`/league/${league._id}`)}>
+                {assets ? (
+                    <Image
+                        source={{ uri: league.leagueImage || assets[0].uri }}
+                        contentFit="cover"
+                        style={{
+                            width: "100%",
+                            height: 150,
+                            borderRadius: 6,
+                        }}
+                    />
+                ) : null}
+            </Pressable>
             <Text className="text-xl font-Do py-3">{league.leagueName}</Text>
 
             <View className="p-3 bg-secondaryWhite rounded-md mb-3">

@@ -71,7 +71,15 @@ export const getSingleLeague = query({
             .query("leagues")
             .withIndex("by_id", (q) => q.eq("_id", args.leagueId))
             .first();
-        return league;
+
+        const populatedPlayers = await Promise.all(
+            league.players.map(async (p) => {
+                const player = await ctx.db.get(p);
+                return player;
+            })
+        );
+
+        return { ...league, populatedPlayers };
     },
 });
 
