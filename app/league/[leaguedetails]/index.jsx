@@ -68,21 +68,28 @@ const LeagueDetails = () => {
     }, [user?._id, convex]);
 
     const purchaseLeague = useCallback(async () => {
+        const converToInt = parseInt(leagueInfo?.leagueFee);
         if (!updatetdUser?._id) {
             Alert.alert("Please login to purchase this league");
             return;
         }
 
-        if (!updatetdUser?.balance || updatetdUser.balance < 500) {
+        if (
+            !updatetdUser?.balance ||
+            updatetdUser.balance < 500 ||
+            converToInt > updatetdUser.balance
+        ) {
             Alert.alert("Not enough balance", "Deposit Now", [
                 { text: "Deposit", onPress: () => router.push("/payment") },
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
             ]);
             return;
         }
 
         try {
-            const converToInt = parseInt(leagueInfo?.leagueFee);
-
             const newUser = await updatePurchases({
                 league: leaguedetails,
                 userId: user._id,
@@ -197,12 +204,20 @@ const LeagueDetails = () => {
 
                     {user?.role === "Team Manager" && (
                         <View className="pb-10">
-                            <IconsButton
-                                onpress={purchaseLeague}
-                                Icon={isLoading ? ActivityIndicator : PlusIcon}
-                                isLoading={isLoading}
-                                text="Apply"
-                            />
+                            {user?.myLeagues?.includes(leaguedetails) ? (
+                                <Text className="text-primary">
+                                    You Already Purchesed this league
+                                </Text>
+                            ) : (
+                                <IconsButton
+                                    onpress={purchaseLeague}
+                                    Icon={
+                                        isLoading ? ActivityIndicator : PlusIcon
+                                    }
+                                    isLoading={isLoading}
+                                    text="Apply"
+                                />
+                            )}
                         </View>
                     )}
                 </ScrollView>

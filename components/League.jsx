@@ -68,7 +68,10 @@ const League = ({ league, user }) => {
                         <LinkArrow />
                     </TouchableOpacity>
                 ) : user?.role === "Team Manager" ? (
-                    <TouchableOpacity className="bg-primary px-3 rounded-md flex-row items-center">
+                    <TouchableOpacity
+                        onPress={() => router.push(`/league/${league?._id}`)}
+                        className="bg-primary px-3 rounded-md flex-row items-center"
+                    >
                         <Text className="font-dmBold font-normal text-base text-white">
                             Apply
                         </Text>
