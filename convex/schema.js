@@ -13,6 +13,7 @@ export default defineSchema({
         phone: v.optional(v.string()),
         notifications: v.optional(v.array(v.id("notification"))),
         balance: v.optional(v.number()),
+        myLeagues: v.optional(v.array(v.id("leagues"))),
     })
         .index("by_email", ["email"])
         .index("by_email_password", ["password", "email"])

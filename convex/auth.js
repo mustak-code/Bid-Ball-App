@@ -228,3 +228,58 @@ export const getUserbyId = query({
         return user;
     },
 });
+export const updatePayment = mutation({
+    args: {
+        userId: v.id("users"),
+        amount: v.number(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_id", (q) => q.eq("_id", args.userId))
+            .first();
+        if (!user) {
+            return {
+                success: false,
+                message: "User not found",
+            };
+        }
+        await ctx.db.patch(user._id, {
+            balance: args.amount,
+        });
+        const newUser = await ctx.db
+            .query("users")
+            .withIndex("by_id", (q) => q.eq("_id", args.userId))
+            .first();
+        return newUser;
+    },
+});
+
+export const updatePurchase = mutation({
+    args: {
+        userId: v.id("users"),
+        league: v.id("leagues"),
+        amount: v.number(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_id", (q) => q.eq("_id", args.userId))
+            .first();
+        if (!user) {
+            return {
+                success: false,
+                message: "User not found",
+            };
+        }
+        await ctx.db.patch(user._id, {
+            myLeagues: args.league,
+            balance: user.balance - args.amount,
+        });
+        const newUser = await ctx.db
+            .query("users")
+            .withIndex("by_id", (q) => q.eq("_id", args.userId))
+            .first();
+        return newUser;
+    },
+});

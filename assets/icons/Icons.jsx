@@ -605,3 +605,40 @@ export const DeleteIcon = (props) => (
         <Path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2M10 11v6M14 11v6" />
     </Svg>
 );
+
+export const CashIcon = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#6d4ca4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-banknote"
+        {...props}
+    >
+        <Rect width={20} height={12} x={2} y={6} rx={2} />
+        <Circle cx={12} cy={12} r={2} />
+        <Path d="M6 12h.01M18 12h.01" />
+    </Svg>
+);
+export const CashIconWhite = (props) => (
+    <Svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={24}
+        height={24}
+        fill="none"
+        stroke="#ffffff"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        className="lucide lucide-banknote"
+        {...props}
+    >
+        <Rect width={20} height={12} x={2} y={6} rx={2} />
+        <Circle cx={12} cy={12} r={2} />
+        <Path d="M6 12h.01M18 12h.01" />
+    </Svg>
+);

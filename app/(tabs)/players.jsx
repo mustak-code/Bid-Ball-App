@@ -132,7 +132,6 @@ const Players = () => {
                     </View>
                     <BottomSheetModal
                         ref={bottomSheetModalRef}
-                        // onChange={handleSheetChanges}
                         snapPoints={snapPoints}
                     >
                         <BottomSheetView className="flex-1 p-4">

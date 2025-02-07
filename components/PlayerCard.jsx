@@ -16,9 +16,9 @@ const PlayerCard = ({ data, showBottomSheet }) => {
         router.push(`/player/${data._id}`);
     };
 
-    const handleShowBottomSheet = () => {
+    const handleShowBottomSheet = (data_idd) => {
         showBottomSheet();
-        setCurrectPlayerSelected(data._id);
+        setCurrectPlayerSelected(data_idd);
     };
 
     return (
@@ -40,7 +40,9 @@ const PlayerCard = ({ data, showBottomSheet }) => {
                 ) : null}
 
                 <View className="flex-1">
-                    <TouchableOpacity onPress={handleShowBottomSheet}>
+                    <TouchableOpacity
+                        onPress={() => handleShowBottomSheet(data._id)}
+                    >
                         <Text className="text-xl font-Do font-normal text-textColor mb-2">
                             {data?.name}
                         </Text>

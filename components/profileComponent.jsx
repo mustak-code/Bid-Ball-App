@@ -84,7 +84,6 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
         setIsLoading(true);
         try {
             phoneRef.current.focus();
-            // setPhone("");
             setIsFocused(!isFocused);
 
             if (isFocused) {
@@ -172,7 +171,7 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
             </View>
             <View className="flex-row justify-between items-start">
                 <View>
-                    <Text className="text-base font-Do">You'r an:</Text>
+                    <Text className="text-base font-Do">You'r: </Text>
                     <Text className="text-base font-Do text-primary">
                         {user?.role}
                     </Text>
@@ -205,7 +204,7 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
                 {user?.role === "Team Manager" && (
                     <View>
                         <Text className="text-base font-Do">Balance</Text>
-                        <Text>0 ৳</Text>
+                        <Text>{user?.balance} ৳</Text>
                     </View>
                 )}
             </View>
@@ -298,7 +297,7 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
             {user?.role === "Team Manager" && (
                 <TouchableOpacity className="p-2 bg-primary rounded-md mb-1 mt-3">
                     <Text className="text-sm text-white font-dmRegular">
-                        ({pendingLEagues?.length}) My Leagues
+                        {user?.myLeagues?.length} My Leagues
                     </Text>
                 </TouchableOpacity>
             )}
