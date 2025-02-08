@@ -1,9 +1,11 @@
 import { useMutation } from "convex/react";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { Alert, Text, ToastAndroid, View } from "react-native";
+import { Alert, ImageBackground, Text, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CashIcon, CashIconWhite, PhoneIcon } from "../../assets/icons/Icons";
+import bgImage from "../../assets/images/bg-image-1.png";
 import IconInput from "../../components/IconInput";
 import IconsButton from "../../components/IconsButton";
 import { api } from "../../convex/_generated/api";
@@ -53,40 +55,47 @@ const index = () => {
 
     return (
         <SafeAreaView>
-            <View className="p-5 ">
-                <Text className="font-Do text-2xl text-center">Deposite</Text>
-                <View className="gap-3 mt-14">
-                    <IconInput
-                        onType={(phone) => {
-                            setPaymentInfo((prev) => ({
-                                ...prev,
-                                phoneNumber: phone,
-                            }));
-                        }}
-                        placeholder="Phone Number"
-                        Icon={PhoneIcon}
-                        className="h-20"
-                        value={paymentInfo.phoneNumber}
-                    />
-                    <IconInput
-                        onType={(amount) => {
-                            setPaymentInfo((prev) => ({
-                                ...prev,
-                                amount: amount,
-                            }));
-                        }}
-                        placeholder="Amount"
-                        Icon={CashIcon}
-                        className="h-20"
-                    />
-                    <IconsButton
-                        onpress={handlePayment}
-                        isLoading={isLoading}
-                        Icon={CashIconWhite}
-                        text="Pay"
-                    />
+            <ImageBackground source={bgImage} className="h-full ">
+                <View className="p-5 flex-1 justify-center">
+                    <Text className="font-Do text-3xl text-center text-white">
+                        Payment
+                    </Text>
+                    <View className="gap-3 mt-5">
+                        <IconInput
+                            onType={(phone) => {
+                                setPaymentInfo((prev) => ({
+                                    ...prev,
+                                    phoneNumber: phone,
+                                }));
+                            }}
+                            placeholder="Phone Number"
+                            Icon={PhoneIcon}
+                            className="h-20"
+                            background="bg-white/90"
+                            value={paymentInfo.phoneNumber}
+                        />
+                        <IconInput
+                            onType={(amount) => {
+                                setPaymentInfo((prev) => ({
+                                    ...prev,
+                                    amount: amount,
+                                }));
+                            }}
+                            placeholder="Amount"
+                            Icon={CashIcon}
+                            className="h-20"
+                            background="bg-white/90"
+                        />
+                        <IconsButton
+                            onpress={handlePayment}
+                            isLoading={isLoading}
+                            Icon={CashIconWhite}
+                            text="Pay"
+                        />
+                    </View>
                 </View>
-            </View>
+            </ImageBackground>
+            <StatusBar backgroundColor="#8a0083" style="light" />
         </SafeAreaView>
     );
 };

@@ -131,7 +131,7 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
     console.log(allLeagues.length);
 
     return (
-        <ScrollView className="px-4" nestedScrollEnabled={true}>
+        <ScrollView className="px-4 h-full" nestedScrollEnabled={true}>
             <View className="flex-row items-center w-[100px] h-[100px] justify-center mt-12 relative mx-auto">
                 {assets ? (
                     isLoading ? (
@@ -162,17 +162,17 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
             </View>
 
             <View className="py-5">
-                <Text className="text-2xl text-primary font-Do text-center font-bold ">
+                <Text className="text-2xl text-white font-Do text-center font-bold ">
                     {user?.name}
                 </Text>
-                <Text className="text-base text-primary font-dmRegular text-center">
+                <Text className="text-base text-white/70 font-dmRegular text-center">
                     @{user?.userName}
                 </Text>
             </View>
             <View className="flex-row justify-between items-start">
                 <View>
-                    <Text className="text-base font-Do">You'r: </Text>
-                    <Text className="text-base font-Do text-primary">
+                    <Text className="text-base text-white font-Do">Role: </Text>
+                    <Text className="text-base font-Do text-white/70">
                         {user?.role}
                     </Text>
                 </View>
@@ -203,8 +203,12 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
                 )}
                 {user?.role === "Team Manager" && (
                     <View>
-                        <Text className="text-base font-Do">Balance</Text>
-                        <Text>{user?.balance} ৳</Text>
+                        <Text className="text-base text-white font-Do">
+                            Balance
+                        </Text>
+                        <Text className="text-base text-white/70">
+                            {user?.balance} ৳
+                        </Text>
                     </View>
                 )}
             </View>
@@ -256,17 +260,19 @@ const ProfileComponent = ({ approvedLeages, pendingLEagues }) => {
                 </View>
             ) : (
                 <View className="mt-5">
-                    <Text className="font-Do text-xl py-2">Info:</Text>
-                    <Text className="font-dmRegular text-base">
+                    <Text className="font-Do text-xl py-2 text-white/70">
+                        Information:
+                    </Text>
+                    <Text className="font-dmRegular text-base text-white mb-2">
                         Email: {user?.email}
                     </Text>
                     {user?.phone ? (
-                        <Text className="font-dmRegular text-base">
+                        <Text className="font-dmRegular text-base text-white">
                             Phone: {user?.phone}
                         </Text>
                     ) : (
                         <View className="flex-row items-center">
-                            <Text className="font-dmRegular text-base">
+                            <Text className="font-dmRegular text-base text-white">
                                 Phone:{" "}
                             </Text>
                             <TextInput

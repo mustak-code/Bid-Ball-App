@@ -11,9 +11,12 @@ const IconInput = ({
     keyboardType,
     onpress,
     onBlur,
+    background,
 }) => {
     return (
-        <View className="bg-primary/10 px-3 rounded-xl flex-row items-center gap-3">
+        <View
+            className={`bg-primary/10 px-3 rounded-xl flex-row items-center gap-3 ${background}`}
+        >
             <View>
                 <Icon />
             </View>

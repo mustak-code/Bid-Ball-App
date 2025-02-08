@@ -273,7 +273,7 @@ export const updatePurchase = mutation({
             };
         }
         await ctx.db.patch(user._id, {
-            myLeagues: args.league,
+            myLeagues: [args.league],
             balance: user.balance - args.amount,
         });
         const newUser = await ctx.db
