@@ -48,11 +48,11 @@ const PlayerCard = ({ data, showBottomSheet }) => {
                         </Text>
                     </TouchableOpacity>
                     <Text className="font-dmRegular text-sm font-normal text-black mb-2">
-                        Lord Association
+                        {data?.genre}
                     </Text>
                     <View className="bg-secondaryWhite w-full flex-row items-center justify-between p-3 rounded-md">
                         <Text className="font-dmBold text-sm font-bold">
-                            25000৳
+                            {data?.minimunBidAmount}৳
                         </Text>
                         <ArrowUp />
                     </View>

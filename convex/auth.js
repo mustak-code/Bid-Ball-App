@@ -266,20 +266,45 @@ export const updatePurchase = mutation({
             .query("users")
             .withIndex("by_id", (q) => q.eq("_id", args.userId))
             .first();
+
         if (!user) {
             return {
                 success: false,
                 message: "User not found",
             };
         }
-        await ctx.db.patch(user._id, {
-            myLeagues: [args.league],
-            balance: user.balance - args.amount,
-        });
+
+        // Safeguard against undefined or NaN values
+        const currentBalance = user?.balance ?? 0;
+        const deductionAmount = args.amount ?? 0;
+
+        // Perform safe subtraction
+        const updatedBalance = currentBalance - deductionAmount;
+
+        if (updatedBalance < 0) {
+            return {
+                success: false,
+                message: "Insufficient balance",
+            };
+        }
+
+        if (user.myLeagues) {
+            await ctx.db.patch(user._id, {
+                myLeagues: [...user?.myLeagues, args.league],
+                balance: updatedBalance,
+            });
+        } else {
+            await ctx.db.patch(user._id, {
+                myLeagues: [args.league],
+                balance: updatedBalance,
+            });
+        }
+
         const newUser = await ctx.db
             .query("users")
             .withIndex("by_id", (q) => q.eq("_id", args.userId))
             .first();
+
         return newUser;
     },
 });
