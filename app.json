@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.bidball",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -32,7 +36,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#232323",
-          "image": "./assets/images/splash-icon-light.png",
+          "image": "./assets/images/splash-icon.png",
           "dark": {
             "image": "./assets/images/splash-icon-dark.png",
             "backgroundColor": "#000000"
@@ -56,7 +60,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "66004f02-4636-461f-b9c1-8e184054ff11"
+        "projectId": "addca17b-94c9-4d28-8540-121620896fc1"
       }
     },
     "owner": "mustak10"
