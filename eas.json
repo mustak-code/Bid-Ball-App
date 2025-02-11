@@ -12,10 +12,6 @@
             "distribution": "internal",
             "android": {
                 "buildType": "apk"
-            },
-            "env": {
-                "CONVEX_DEPLOYMENT": "dev:frugal-swordfish-377",
-                "EXPO_PUBLIC_CONVEX_URL": "https://frugal-swordfish-377.convex.cloud"
             }
         },
         "production": {
